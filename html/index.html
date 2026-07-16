@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../css/style.css">
     <script src="../js/effects.js"></script>
     <script src="../js/common.js"></script>
+    <script src="../js/terminal.js"></script>
     <title>Welcome SKALA</title>
 </head>
 <body>
@@ -31,9 +32,9 @@
                 <span class="tl red"></span><span class="tl yellow"></span><span class="tl green"></span>
                 <span class="term-title">park@skala: ~/skala-front — zsh</span>
             </div>
-            <div class="term-body">
+            <div class="term-body" id="termBody">
                 <p><span class="prompt">➜</span> <span class="path">~/skala-front</span> whoami</p>
-                <p><span class="big" id="typed"></span><span class="cursor"></span></p>
+                <p class="term-typed"><span class="big" id="typed"></span><span class="cursor"></span></p>
                 <p><span class="prompt">➜</span> <span class="path">~/skala-front</span> figlet PARK</p>
 <pre class="ascii"> ____   _    ____  _  __
 |  _ \ / \  |  _ \| |/ /
@@ -47,6 +48,18 @@
                 <p><span class="clock-badge" id="clock">로딩 중...</span></p>
                 <p class="comment"># Tip: <strong style="color:#79c0ff">⌘K</strong> (또는 Ctrl+K) 로 명령 팔레트를 열어보세요</p>
                 <p class="comment"># Tip: <strong style="color:#d2a8ff">↑ ↑ ↓ ↓</strong> 입력 → 매트릭스 이스터에그 실행</p>
+
+                <!-- 인터랙티브 터미널 출력 -->
+                <div id="termOutput"></div>
+            </div>
+            <!-- 항상 보이는 입력줄 (스크롤 영역 밖 고정) -->
+            <div class="term-inputline" id="termInputline">
+                <span class="prompt">➜</span>
+                <span class="path">~/skala-front</span>
+                <span class="term-dollar">$</span>
+                <input id="termInput" type="text" autocomplete="off" spellcheck="false"
+                       aria-label="터미널 명령 입력" placeholder="명령어를 입력하세요  (예: help)">
+                <span class="term-hint">↵ Enter</span>
             </div>
         </section>
 

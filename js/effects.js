@@ -88,6 +88,92 @@
         konami();
         featureHint();
         injectHelpButton();
+        countUp();
+        buildHeatmap();
+    }
+
+    /* ---------- GitHub 활동 히트맵 (실제 데이터 + 폴백) ---------- */
+    function buildHeatmap() {
+        var el = document.getElementById("heatmap");
+        if (!el) return;
+        var cap = document.getElementById("heatmapCap");
+        var USER = "givpro22";
+
+        fetch("https://github-contributions-api.jogruber.de/v4/" + USER + "?y=last")
+            .then(function (r) { if (!r.ok) throw new Error("bad"); return r.json(); })
+            .then(function (data) {
+                var days = (data && data.contributions) || [];
+                if (!days.length) throw new Error("empty");
+                el.innerHTML = "";
+                // 첫 날 요일만큼 빈 칸으로 채워 요일 정렬
+                var pad = new Date(days[0].date + "T00:00:00").getDay();
+                for (var i = 0; i < pad; i++) {
+                    var sp = document.createElement("div");
+                    sp.className = "cell empty";
+                    el.appendChild(sp);
+                }
+                var total = 0;
+                days.forEach(function (d) {
+                    total += d.count || 0;
+                    var cell = document.createElement("div");
+                    cell.className = "cell";
+                    var lvl = (typeof d.level === "number")
+                        ? d.level
+                        : (d.count === 0 ? 0 : d.count < 3 ? 1 : d.count < 6 ? 2 : d.count < 10 ? 3 : 4);
+                    if (lvl) cell.classList.add("l" + lvl);
+                    cell.title = d.date + " · " + (d.count || 0) + " commits";
+                    el.appendChild(cell);
+                });
+                if (cap) cap.textContent =
+                    "실제 GitHub 커밋 활동 · github.com/" + USER + " (최근 1년 · 총 " + total.toLocaleString() + "회)";
+            })
+            .catch(function () {
+                renderExampleHeatmap(el);
+                if (cap) cap.textContent = "지난 1년간의 커밋 활동 (예시 데이터 · GitHub 연결 실패)";
+            });
+    }
+
+    function renderExampleHeatmap(el) {
+        el.innerHTML = "";
+        for (var w = 0; w < 52; w++) {
+            for (var d = 0; d < 7; d++) {
+                var cell = document.createElement("div");
+                cell.className = "cell";
+                var r = Math.random();
+                var lvl = r > 0.85 ? 4 : r > 0.7 ? 3 : r > 0.5 ? 2 : r > 0.28 ? 1 : 0;
+                if (lvl) cell.classList.add("l" + lvl);
+                el.appendChild(cell);
+            }
+        }
+    }
+
+    /* ---------- 숫자 카운트업 (화면에 보일 때) ---------- */
+    function countUp() {
+        var els = document.querySelectorAll(".count-up");
+        if (!els.length) return;
+        function animate(el) {
+            var target = parseInt(el.getAttribute("data-target"), 10) || 0;
+            var suffix = el.getAttribute("data-suffix") || "";
+            var dur = 1100, start = null;
+            function step(ts) {
+                if (!start) start = ts;
+                var p = Math.min((ts - start) / dur, 1);
+                var eased = 1 - Math.pow(1 - p, 3);
+                el.textContent = Math.round(eased * target) + suffix;
+                if (p < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+        if ("IntersectionObserver" in window) {
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (en) {
+                    if (en.isIntersecting) { animate(en.target); io.unobserve(en.target); }
+                });
+            }, { threshold: 0.4 });
+            els.forEach(function (el) { io.observe(el); });
+        } else {
+            els.forEach(animate);
+        }
     }
 
     /* ---------- 플로팅 도움말 버튼 (전 페이지) ---------- */
