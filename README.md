@@ -25,9 +25,10 @@
 
 | 구분 | 사용 기술 |
 |------|-----------|
-| Markup | HTML5 (Semantic Elements) |
-| Style | CSS3 (External Stylesheet, Box Model, Google Fonts) |
-| Font | Noto Sans KR (Google Fonts) |
+| Markup | HTML5 (Semantic Elements, Forms, Media, Table) |
+| Style | CSS3 (변수 · 다크모드 · 애니메이션 · Flex/Grid · 반응형) |
+| Script | Vanilla JavaScript (DOM · 이벤트 · localStorage · IntersectionObserver) |
+| Font | OS 기본 시스템 폰트 (외부 라이브러리·CDN 미사용) |
 | Tool | VS Code, Live Server |
 
 ---
@@ -38,15 +39,19 @@
 skala-front/
 ├── README.md
 ├── css/
-│   └── style.css          # 전체 공통 스타일 (테마 · 박스모델 · 폼)
+│   └── style.css          # 전체 공통 스타일 (테마 · 다크모드 · 애니메이션 · 반응형)
+├── js/
+│   ├── common.js          # 공통 (다크모드 · 스크롤 애니메이션 · 시계 · 맨위로)
+│   ├── signup.js          # 회원가입 폼 실시간 검증 · 비밀번호 강도
+│   └── result.js          # 제출값 요약 표시 · 컨페티
 └── html/
-    ├── index.html         # 🏠 메인 포털 (nav / main / aside)
-    ├── myProfile.html     # 👤 나의 소개
-    ├── myClass.html       # 📅 나의 강의 시간표
-    ├── holiday.html       # 🎉 나의 휴일 일과
-    ├── myTrip.html        # 🌏 나의 여행 앨범
-    ├── signUp.html        # 📝 회원가입 폼
-    ├── signUpResult.html  # ✅ 회원가입 결과
+    ├── index.html         # 🏠 메인 포털 (타이핑 · 시계 · 이미지 슬라이더)
+    ├── myProfile.html     # 👤 나의 소개 (탭 · 스킬 프로그레스바)
+    ├── myClass.html       # 📅 나의 강의 시간표 (오늘 요일 강조 · 셀 선택)
+    ├── holiday.html       # 🎉 나의 휴일 일과 (타임라인 · details)
+    ├── myTrip.html        # 🌏 나의 여행 앨범 (라이트박스 갤러리)
+    ├── signUp.html        # 📝 회원가입 폼 (실시간 검증)
+    ├── signUpResult.html  # ✅ 회원가입 결과 (제출값 요약 · 컨페티)
     └── media/             # 여행 앨범용 이미지 · 오디오 · 비디오
 ```
 
@@ -70,11 +75,33 @@ skala-front/
 
 전체 페이지에 외부 스타일시트를 연결하여 통일된 디자인을 적용했습니다.
 
-- **전체 테마** — Google Fonts(Noto Sans KR), 배경색 · 줄간격 · 기본 텍스트 색상
+- **전체 테마** — OS 기본 시스템 폰트, 배경색 · 줄간격 · 기본 텍스트 색상
 - **제목 강조** — `h1` `h2`에 색상 · 패딩 · 보더로 시각적 계층 구성
 - **링크 스타일** — `:hover` 시 색상 전환 효과
 - **박스 모델** — `.container`로 콘텐츠 가운데 정렬, 여행지 `.trip-card`, 시간표 테이블 꾸미기
 - **폼 스타일** — 입력창 · `fieldset` 테두리 · 버튼 디자인
+- **CSS 변수 & 다크모드** — `:root` 토큰과 `[data-theme="dark"]`로 라이트/다크 테마 전환
+- **애니메이션** — `@keyframes`(fadeInUp · blink · confetti), `transition`, `:hover` 효과
+- **레이아웃** — Flexbox 상단 네비게이션, CSS Grid 카드/갤러리
+- **반응형** — `@media`로 PC · 태블릿 · 모바일 대응, `prefers-reduced-motion` 접근성 배려
+
+---
+
+## ⚡ JavaScript 인터랙션
+
+바닐라 JavaScript로 페이지에 동작을 더했습니다.
+
+| 기능 | 설명 | 페이지 |
+|------|------|--------|
+| 🌙 다크모드 토글 | `localStorage`에 테마 저장 후 재방문 시 유지 | 전체 |
+| ⬆️ 맨 위로 · 스크롤 등장 | `IntersectionObserver`로 요소가 보일 때 페이드인 | 전체 |
+| 🕒 실시간 시계 · 타이핑 효과 | `setInterval` 시계, 문구 타이핑 애니메이션 | index |
+| 🖼️ 이미지 슬라이더 | 자동 · 수동 사진 전환 | index |
+| 🗂️ 탭 전환 · 스킬 바 | 탭 UI, 프로그레스 바 애니메이션, 목표 추가 | myProfile |
+| 📅 오늘 요일 강조 | `Date`로 오늘 열 강조, 셀 클릭 표시 | myClass |
+| 🔍 라이트박스 갤러리 | 사진 클릭 시 모달 확대 | myTrip |
+| ✅ 실시간 폼 검증 | 아이디/비밀번호 검증, 강도 미터, 글자수 카운터 | signUp |
+| 🎊 제출값 요약 · 컨페티 | URL 쿼리 파싱으로 입력값 표시 + 축하 효과 | signUpResult |
 
 ---
 
@@ -107,3 +134,10 @@ skala-front/
 - [x] 미션1 — 전체 테마 및 텍스트 Styling
 - [x] 미션2 — 박스 모델의 이해
 - [x] 미션3 — 가독성 높은 회원가입 폼
+
+### 심화 (CSS · JavaScript)
+- [x] CSS 변수 · 다크모드 테마 전환
+- [x] 애니메이션 · 트랜지션 효과
+- [x] Flexbox · Grid 레이아웃
+- [x] 반응형 (Media Query)
+- [x] JavaScript 인터랙션 (검증 · 슬라이더 · 라이트박스 · 컨페티 등)

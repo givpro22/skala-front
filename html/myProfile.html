@@ -3,37 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="박영서(Park Youngseo) - 프론트엔드 개발자 소개 · 교육 · 수상 · 자격증 · 프로젝트">
     <link rel="stylesheet" href="../css/style.css">
-    <title>나의 소개</title>
+    <script src="../js/common.js"></script>
+    <title>나의 소개 · 박영서</title>
 </head>
 <body>
+    <header class="topbar">
+        <div class="brand">SKALA<span>·</span>FRONT</div>
+        <nav>
+            <a href="index.html">홈</a>
+            <a href="myProfile.html">소개</a>
+            <a href="myClass.html">시간표</a>
+            <a href="holiday.html">휴일</a>
+            <a href="myTrip.html">여행</a>
+            <a href="signUp.html">회원가입</a>
+        </nav>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="테마 전환">🌙</button>
+    </header>
+
     <div class="container">
-    <h1>&#128075; 안녕하세요! 저를 소개합니다</h1>
-    <p>아래는 제가 좋아하는 것들과 올해의 계획, 그리고 저를 표현하는 단어들입니다.</p>
+        <h1>👋 안녕하세요, 박영서입니다</h1>
 
-    <h2>&#127829; 내가 좋아하는 음식</h2>
-    <ul>
-        <li>아이스 아메리카노</li>
-        <li>매콤한 떡볶이</li>
-        <li>달콤한 초콜릿 케이크</li>
-    </ul>
+        <!-- 프로필 헤더 카드 -->
+        <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;margin:20px 0;">
+            <div style="width:110px;height:110px;border-radius:50%;overflow:hidden;
+                        box-shadow:var(--shadow-md);flex-shrink:0;border:3px solid var(--surface);
+                        animation:float 4s ease-in-out infinite;">
+                <img src="media/profile.png" alt="박영서 프로필 사진"
+                     style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <div>
+                <p style="font-size:1.15rem;font-weight:700;color:var(--brand-dark);margin:0 0 6px;">
+                    Park Youngseo · 프론트엔드 개발자
+                </p>
+                <p style="margin:0;color:var(--text-soft);">
+                    “서비스에 대한 <mark>주인의식</mark>을 갖고 깊게 관여하는 개발자”
+                </p>
+            </div>
+        </div>
 
-    <h2>&#128197; 올해 할 일</h2>
-    <ol>
-        <li>일주일에 책 한 권씩 읽기</li>
-        <li>꾸준히 운동해서 체력 키우기</li>
-        <li>새로운 프로그래밍 언어 배우기</li>
-    </ol>
+        <!-- 기본 정보 (ul) -->
+        <ul style="list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:10px;">
+            <li class="badge">🎂 2001. 03. 21</li>
+            <li class="badge">📧 givpro22@daum.net</li>
+            <li class="badge">🔗 <a href="https://github.com/givpro22" target="_blank" rel="noopener">github.com/givpro22</a></li>
+        </ul>
 
-    <h2>&#10024; 나를 설명하는 단어들</h2>
-    <dl>
-        <dt>호기심</dt>
-        <dd>새로운 기술이나 흥미로운 트렌드를 보면 직접 경험해보고 배워야 직성이 풀립니다.</dd>
-        <dt>꾸준함</dt>
-        <dd>매일 작은 계획이라도 세우고 그것을 지키기 위해 노력하는 성실함을 가지고 있습니다.</dd>
-        <dt>크리에이티브</dt>
-        <dd>단순한 결과물보다는 사용자에게 더 나은 경험과 시각적인 즐거움을 주는 것을 좋아합니다.</dd>
-    </dl>
+        <!-- 탭 -->
+        <div class="tabs" role="tablist">
+            <button class="tab-btn active" data-tab="about">🙋 소개</button>
+            <button class="tab-btn" data-tab="history">🏆 이력</button>
+            <button class="tab-btn" data-tab="projects">💼 프로젝트</button>
+            <button class="tab-btn" data-tab="skills">📊 스킬</button>
+        </div>
+
+        <!-- 탭 1: 소개 (dl + ol 인터랙티브) -->
+        <section class="tab-panel active" id="about" role="tabpanel">
+            <h2>✨ 저는 이런 사람이에요</h2>
+            <p>단순히 서비스를 만드는 메이커가 아닌, 서비스에 대해 깊게 생각하고 좋은 서비스를
+               만들기 위해 고민하는 것을 좋아합니다. <strong>메이킹</strong>을 좋아해 사이드
+               프로젝트로 꾸준히 만드는 활동을 이어가고 있습니다.</p>
+
+            <dl>
+                <dt>주인의식</dt>
+                <dd>나만의 서비스를 만들려는 것은 경계하며, 책임을 다해 서비스에 깊게 관여하고자 합니다.</dd>
+                <dt>메이킹</dt>
+                <dd>“만드는 것”을 좋아해 개발자를 택했고, 그중 잘할 수 있는 파트가 ‘개발’이라 생각했습니다.</dd>
+                <dt>안정성 우선</dt>
+                <dd>로딩·에러·빈 화면·재시도 같은 예외 상황에서도 흐름이 끊기지 않는 설계를 중요하게 생각합니다.</dd>
+            </dl>
+
+            <h2>🎯 2026년 목표</h2>
+            <ol id="todoList">
+                <li>사이드 프로젝트 1개 이상 정식 출시하기</li>
+                <li>새로운 프레임워크 깊이 있게 학습하기</li>
+                <li>기술 블로그 꾸준히 작성하기</li>
+            </ol>
+            <div class="btn-row">
+                <input type="text" id="todoInput" placeholder="새로운 목표를 입력하세요">
+                <button class="btn btn-primary" id="addTodo">추가 ＋</button>
+            </div>
+            <p><small>💡 JavaScript로 목표를 직접 추가할 수 있어요.</small></p>
+        </section>
+
+        <!-- 탭 2: 이력 (timeline + ol + ul) -->
+        <section class="tab-panel" id="history" role="tabpanel">
+            <h2>🎓 교육</h2>
+            <div class="timeline">
+                <div class="event">
+                    <span class="time">2021.03 – 2026.08</span><br>
+                    전남대학교 인공지능학부 (소프트웨어전공) · 졸업예정
+                </div>
+                <div class="event">
+                    <span class="time">2025.03 – 2025.11</span><br>
+                    카카오테크 캠퍼스 · 프론트엔드(FE) 과정
+                </div>
+            </div>
+
+            <h2>🏆 수상</h2>
+            <ol>
+                <li>2025 전남대학교 소프트웨어중심대학 SW창업경진대회 <strong>최우수상</strong></li>
+                <li>2025 카카오테크캠퍼스 아이디어톤 <strong>우수상</strong></li>
+                <li>2024 전남대학교 AI융합문제발굴 해커톤 <strong>장려상</strong></li>
+                <li>2021 전남대학교 창업아이템경진대회 <strong>입선</strong></li>
+            </ol>
+
+            <h2>📜 자격증 &amp; 어학</h2>
+            <ul>
+                <li>2026 <mark>빅데이터분석기사</mark></li>
+                <li>2026 토익스피킹 <strong>IH (Intermediate High)</strong></li>
+                <li>2025 정보처리기사</li>
+                <li>2023 SQLD</li>
+                <li>2021 컴퓨터활용능력 1급</li>
+            </ul>
+        </section>
+
+        <!-- 탭 3: 프로젝트 -->
+        <section class="tab-panel" id="projects" role="tabpanel">
+            <h2>💼 대표 프로젝트</h2>
+
+            <article class="info-card" style="margin-bottom:18px;">
+                <h3>🛵 발로뛰어 <small>(Project 1)</small></h3>
+                <p>캠퍼스 내 사용자 간 배달 서비스 · <strong>팀장(PM)</strong></p>
+                <p>
+                    <span class="badge">React</span>
+                    <span class="badge">TypeScript</span>
+                    <span class="badge">Node.js(Express)</span>
+                    <span class="badge">MongoDB</span>
+                    <span class="badge">RabbitMQ</span>
+                </p>
+                <p><small>2024.12 – 2025.12 (12개월) · 구성원 2명 · Play 스토어 출시 운영</small></p>
+                <details>
+                    <summary>프로젝트 회고 보기</summary>
+                    <p>기능이 많은 것보다 <strong>안정적으로 동작</strong>하는 것이 더 중요하다는 것,
+                       그리고 P2P 서비스에서 로그인·토큰·주소 관리가 단순 CRUD가 아니라
+                       <mark>신뢰를 만드는 기반</mark>이라는 것을 배웠습니다.</p>
+                </details>
+                <p><a href="https://github.com/wrd1stProgrammer/BalloRun-App-Service" target="_blank" rel="noopener">GitHub 저장소 ↗</a></p>
+            </article>
+
+            <article class="info-card" style="margin-bottom:18px;">
+                <h3>🌿 휴쉼 <small>(Project 2)</small></h3>
+                <p>고립·은둔 청년의 감정 공유 기반 커뮤니티 · <strong>FrontEnd</strong></p>
+                <p>
+                    <span class="badge">React</span>
+                    <span class="badge">TypeScript</span>
+                    <span class="badge">Figma</span>
+                </p>
+                <p><small>2025.09 – 2025.12 (3개월) · 구성원 6명 (FE 2 / BE 4)</small></p>
+                <details>
+                    <summary>프로젝트 회고 보기</summary>
+                    <p>상담챗봇·메인화면·댓글/대댓글·지원사업 플로우를 구현하며,
+                       로딩·에러·재시도 같은 <strong>예외 상황 설계</strong>가 프론트엔드 품질을
+                       결정한다는 점을 크게 느꼈습니다.</p>
+                </details>
+                <p><a href="https://github.com/kakao-tech-campus-3rd-step3/Team15_FE" target="_blank" rel="noopener">GitHub 저장소 ↗</a></p>
+            </article>
+
+            <article class="info-card">
+                <h3>🏛️ 상공회의소 커뮤니티 <small>(Project 3)</small></h3>
+                <p>부감독 정보 공유 커뮤니티 · <strong>FrontEnd &amp; BackEnd</strong></p>
+                <p>
+                    <span class="badge">Next.js</span>
+                    <span class="badge">TypeScript</span>
+                    <span class="badge">Supabase</span>
+                </p>
+                <p><small>2025.12 – 2026.02 (3개월) · 구성원 1명 (1인 개발)</small></p>
+                <details>
+                    <summary>프로젝트 회고 보기</summary>
+                    <p>실제 사용자 피드백을 반영해 서비스를 개선하고, 핵심 기능과 확장 기능을
+                       구분해 <mark>개발 우선순위</mark>를 설정한 경험을 했습니다.</p>
+                </details>
+                <p><a href="https://github.com/givpro22/GJCCI-NEXT" target="_blank" rel="noopener">GitHub 저장소 ↗</a></p>
+            </article>
+        </section>
+
+        <!-- 탭 4: 스킬 -->
+        <section class="tab-panel" id="skills" role="tabpanel">
+            <h2>📊 나의 기술 스택</h2>
+            <div class="skill">
+                <div class="skill-label"><span>JavaScript / TypeScript</span><span>90%</span></div>
+                <div class="progress"><div class="progress-bar" data-value="90"></div></div>
+            </div>
+            <div class="skill">
+                <div class="skill-label"><span>React</span><span>88%</span></div>
+                <div class="progress"><div class="progress-bar" data-value="88"></div></div>
+            </div>
+            <div class="skill">
+                <div class="skill-label"><span>Next.js</span><span>80%</span></div>
+                <div class="progress"><div class="progress-bar" data-value="80"></div></div>
+            </div>
+            <div class="skill">
+                <div class="skill-label"><span>Node.js (Express)</span><span>72%</span></div>
+                <div class="progress"><div class="progress-bar" data-value="72"></div></div>
+            </div>
+            <div class="skill">
+                <div class="skill-label"><span>Figma</span><span>70%</span></div>
+                <div class="progress"><div class="progress-bar" data-value="70"></div></div>
+            </div>
+        </section>
     </div>
+
+    <button class="to-top" aria-label="맨 위로">↑</button>
+
+    <script>
+        // 탭 전환
+        var tabBtns = document.querySelectorAll(".tab-btn");
+        var panels = document.querySelectorAll(".tab-panel");
+        function animateSkills() {
+            document.querySelectorAll("#skills .progress-bar").forEach(function (bar) {
+                bar.style.width = bar.getAttribute("data-value") + "%";
+            });
+        }
+        tabBtns.forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                tabBtns.forEach(function (b) { b.classList.remove("active"); });
+                panels.forEach(function (p) { p.classList.remove("active"); });
+                btn.classList.add("active");
+                document.getElementById(btn.getAttribute("data-tab")).classList.add("active");
+                if (btn.getAttribute("data-tab") === "skills") animateSkills();
+            });
+        });
+
+        // 2026 목표 추가
+        var addBtn = document.getElementById("addTodo");
+        var input = document.getElementById("todoInput");
+        var list = document.getElementById("todoList");
+        function addTodo() {
+            var v = input.value.trim();
+            if (!v) { showToast("목표를 입력해 주세요 ✏️"); return; }
+            var li = document.createElement("li");
+            li.textContent = v;
+            list.appendChild(li);
+            input.value = "";
+            showToast("목표가 추가되었어요! 🎯");
+        }
+        addBtn.addEventListener("click", addTodo);
+        input.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") addTodo();
+        });
+    </script>
 </body>
 </html>

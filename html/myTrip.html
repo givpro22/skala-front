@@ -3,43 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ParkYoungSeo의 여행 사진 · 음악 · 영상 앨범">
     <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/common.js"></script>
     <title>나의 여행지</title>
 </head>
 <body>
+    <header class="topbar">
+        <div class="brand">SKALA<span>·</span>FRONT</div>
+        <nav>
+            <a href="index.html">홈</a>
+            <a href="myProfile.html">소개</a>
+            <a href="myClass.html">시간표</a>
+            <a href="holiday.html">휴일</a>
+            <a href="myTrip.html">여행</a>
+            <a href="signUp.html">회원가입</a>
+        </nav>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="테마 전환">🌙</button>
+    </header>
+
     <div class="container">
-    <h1>&#127758; 나의 여행 앨범 &#127925;</h1>
+        <h1>🌏 나의 여행 앨범 🎵</h1>
+        <p>사진을 클릭하면 크게 볼 수 있어요. 배경 음악과 브이로그 영상도 함께 즐겨보세요.</p>
 
-    <!-- 배경 음악: media 폴더에 travel-music.mp3 파일을 넣어주세요 -->
-    <audio controls>
-        <source src="media/travel-music.mp3" type="audio/mpeg">
-        <source src="media/travel-music.ogg" type="audio/ogg">
-        브라우저가 audio 요소를 지원하지 않습니다.
-    </audio>
+        <!-- 배경 음악 -->
+        <section class="media-box" data-reveal>
+            <h3>🎧 여행의 배경 음악</h3>
+            <audio controls>
+                <source src="media/travel-music.mp3" type="audio/mpeg">
+                <source src="media/travel-music.ogg" type="audio/ogg">
+                브라우저가 audio 요소를 지원하지 않습니다.
+            </audio>
+        </section>
 
-    <figure class="trip-card">
-        <img src="media/trip1.jpg" alt="리장 호도협" style="width:400px;">
-        <figcaption>리장 호도협 (2025년)</figcaption>
-    </figure>
+        <!-- 사진 갤러리 (Grid + Lightbox) -->
+        <h2>🖼️ 여행 사진 갤러리</h2>
+        <div class="gallery">
+            <figure class="trip-card" data-reveal>
+                <img src="media/trip1.jpg" alt="리장 호도협" data-caption="리장 호도협 (2025년)">
+                <figcaption>리장 호도협 (2025년)</figcaption>
+            </figure>
+            <figure class="trip-card" data-reveal>
+                <img src="media/trip2.jpg" alt="세부 탑스힐" data-caption="세부 탑스힐 (2024년)">
+                <figcaption>세부 탑스힐 (2024년)</figcaption>
+            </figure>
+            <figure class="trip-card" data-reveal>
+                <img src="media/trip3.jpg" alt="홋카이도 대설산" data-caption="홋카이도 대설산 (2025년)">
+                <figcaption>홋카이도 대설산 (2025년)</figcaption>
+            </figure>
+        </div>
 
-    <figure class="trip-card">
-        <img src="media/trip2.jpg" alt="세부 탑스힐" style="width:400px;">
-        <figcaption>세부 탑스힐 (2024년)</figcaption>
-    </figure>
-
-    <figure class="trip-card">
-        <img src="media/trip3.jpg" alt="홋카이도 대설산" style="width:400px;">
-        <figcaption>홋카이도 대설산 (2025년)</figcaption>
-    </figure>
-
-    <h2>&#128250; 나의 여행 브이로그</h2>
-    <!-- 영상: media 폴더에 trip-vlog.mp4 파일을 넣어주세요 -->
-    <video controls width="400">
-        <source src="media/trip-vlog.mp4" type="video/mp4">
-        <source src="media/trip-vlog.ogg" type="video/ogg">
-        브라우저가 video 요소를 지원하지 않습니다.
-    </video>
-    <p>리장의 아름다운 음악 &#127925;</p>
+        <!-- 브이로그 영상 -->
+        <section class="media-box" data-reveal>
+            <h2>📺 나의 여행 브이로그</h2>
+            <video controls>
+                <source src="media/trip-vlog.mp4" type="video/mp4">
+                <source src="media/trip-vlog.ogg" type="video/ogg">
+                브라우저가 video 요소를 지원하지 않습니다.
+            </video>
+            <p>리장의 아름다운 풍경과 음악 🎵</p>
+        </section>
     </div>
+
+    <!-- 라이트박스 모달 -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+        <span class="close" id="lbClose" aria-label="닫기">&times;</span>
+        <div style="text-align:center;">
+            <img id="lbImg" src="" alt="확대 이미지">
+            <div class="caption" id="lbCaption"></div>
+        </div>
+    </div>
+
+    <button class="to-top" aria-label="맨 위로">↑</button>
+
+    <script>
+        (function lightbox() {
+            var lb = document.getElementById("lightbox");
+            var lbImg = document.getElementById("lbImg");
+            var lbCap = document.getElementById("lbCaption");
+            document.querySelectorAll(".gallery img").forEach(function (img) {
+                img.addEventListener("click", function () {
+                    lbImg.src = img.src;
+                    lbCap.textContent = img.getAttribute("data-caption") || "";
+                    lb.classList.add("open");
+                });
+            });
+            function closeLb() { lb.classList.remove("open"); }
+            document.getElementById("lbClose").addEventListener("click", closeLb);
+            lb.addEventListener("click", function (e) {
+                if (e.target === lb) closeLb();
+            });
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape") closeLb();
+            });
+        })();
+    </script>
 </body>
 </html>

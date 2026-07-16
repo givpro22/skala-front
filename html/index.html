@@ -3,59 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ParkYoungSeo의 개인 포털 - 프로필, 강의 시간표, 여행 앨범을 한 곳에서">
     <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/common.js"></script>
     <title>Welcome SKALA</title>
 </head>
 <body>
-    <div class="container">
-    <header>
-        <h1>&#128640; 나의 유니버스</h1>
-        <p>저의 프로필, 학습 내용, 여행 기록을 모아둔 Hub 페이지입니다.</p>
+    <!-- 전역 상단 네비게이션 바 -->
+    <header class="topbar">
+        <div class="brand">SKALA<span>·</span>FRONT</div>
+        <nav>
+            <a href="index.html">홈</a>
+            <a href="myProfile.html">소개</a>
+            <a href="myClass.html">시간표</a>
+            <a href="holiday.html">휴일</a>
+            <a href="myTrip.html">여행</a>
+            <a href="signUp.html">회원가입</a>
+        </nav>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="테마 전환">🌙</button>
     </header>
 
-    <nav>
-        <h2>&#128193; 바로가기 메뉴</h2>
-        <ul>
-            <li><a href="myProfile.html">소개 (Profile)</a></li>
-            <li><a href="myClass.html">수업 시간표 (Class)</a></li>
-            <li><a href="holiday.html">휴일 계획 (Holiday)</a></li>
-            <li><a href="myTrip.html">여행 앨범 (Album)</a></li>
-            <li><a href="signUp.html">&#128100; 회원가입 (Sign Up)</a></li>
-        </ul>
-    </nav>
-
-    <hr>
-
-    <main>
-        <h2>&#128204; 오늘의 주요 소식</h2>
-        <section>
-            <h3>최근 공지 및 업데이트</h3>
-            <h4>[업데이트] 여행 앨범에 동영상 추가 완료!</h4>
-            <p>홋카이도 대설산 단락 아래에 멋진 브이로그 영상을 추가했습니다. 이제 소리와 영상으로 여행을 추억할 수 있습니다.</p>
-            <p>작성일: 2026년 7월 15일</p>
+    <div class="container">
+        <!-- 히어로: 타이핑 효과 + 실시간 시계 -->
+        <section class="hero">
+            <h1>🚀 <span id="typed"></span><span class="cursor">&nbsp;</span></h1>
+            <p class="subtitle">박영서(Park Youngseo)의 프로필 · 학습 내용 · 여행 기록을 모아둔 Hub 페이지입니다.</p>
+            <div class="clock-badge" id="clock">🕒 로딩 중...</div>
         </section>
 
-        <section>
-            <h3>&#128247; 이달의 베스트 컷</h3>
-            <img src="media/trip1.jpg" alt="리장 호도협" style="width:250px;">
-            <p>중국 리장 호도협의 웅장한 협곡 모습 (2025년 촬영)</p>
-        </section>
-    </main>
+        <!-- 바로가기 (p.67 요구사항: a 내비게이션) -->
+        <nav class="page-nav" data-reveal>
+            <h2>📁 바로가기 메뉴</h2>
+            <ul>
+                <li><a href="myProfile.html">👤 소개 (Profile)</a></li>
+                <li><a href="myClass.html">📅 수업 시간표 (Class)</a></li>
+                <li><a href="holiday.html">🎉 휴일 계획 (Holiday)</a></li>
+                <li><a href="myTrip.html">🌏 여행 앨범 (Album)</a></li>
+                <li><a href="signUp.html">📝 회원가입 (Sign Up)</a></li>
+            </ul>
+        </nav>
 
-    <hr>
+        <hr>
 
-    <aside>
-        <h2>&#127780; 실시간 정보</h2>
-        <p>현재 위치: 광주광역시 광산구 &#128205;</p>
-        <p>추천 학습 사이트: <a href="https://www.w3schools.com" target="_blank">W3Schools 온라인 명세서</a></p>
-    </aside>
+        <main>
+            <h2 data-reveal>📌 오늘의 주요 소식</h2>
 
-    <hr>
+            <!-- 카드 그리드 (CSS Grid) -->
+            <div class="card-grid">
+                <article class="info-card" data-reveal>
+                    <span class="icon">🆕</span>
+                    <h3>여행 앨범 영상 추가</h3>
+                    <p>홋카이도 대설산 아래에 브이로그 영상을 추가했습니다. 소리와 영상으로 여행을 추억하세요.</p>
+                    <p><small>2026년 7월 15일</small></p>
+                </article>
+                <article class="info-card" data-reveal>
+                    <span class="icon">🎨</span>
+                    <h3>다크 모드 지원</h3>
+                    <p>우측 상단 🌙 버튼으로 라이트/다크 테마를 전환할 수 있습니다. 설정은 자동 저장됩니다.</p>
+                    <p><small>JavaScript · localStorage</small></p>
+                </article>
+                <article class="info-card" data-reveal>
+                    <span class="icon">📱</span>
+                    <h3>반응형 디자인</h3>
+                    <p>PC · 태블릿 · 모바일 어떤 화면에서도 최적화된 레이아웃으로 표시됩니다.</p>
+                    <p><small>CSS Media Query</small></p>
+                </article>
+            </div>
 
-    <footer>
-        <p>이메일 문의: myemail@example.com</p>
-        <p>&copy; 2026 나의 포트폴리오. 모든 태그는 웹 표준 시맨틱 태그로 작성되었습니다.</p>
-    </footer>
+            <!-- 이미지 슬라이더 -->
+            <section data-reveal>
+                <h3>📷 이달의 베스트 컷</h3>
+                <figure class="trip-card" style="max-width:420px;margin:16px auto;">
+                    <img id="slide" src="media/trip1.jpg" alt="이달의 여행 사진">
+                    <figcaption id="slideCaption">중국 리장 호도협 (2025년 촬영)</figcaption>
+                    <div class="btn-row" style="justify-content:center;">
+                        <button class="btn btn-ghost" id="prevBtn" aria-label="이전 사진">‹ 이전</button>
+                        <button class="btn btn-primary" id="nextBtn" aria-label="다음 사진">다음 ›</button>
+                    </div>
+                </figure>
+            </section>
+        </main>
+
+        <hr>
+
+        <aside data-reveal>
+            <h2>🌠 실시간 정보</h2>
+            <p>현재 위치: 광주광역시 광산구 📍</p>
+            <p>추천 학습 사이트:
+                <a href="https://www.w3schools.com" target="_blank" rel="noopener">W3Schools 온라인 명세서 ↗</a>
+            </p>
+        </aside>
+
+        <footer>
+            <p>이메일 문의: <a href="mailto:givpro22@daum.net">givpro22@daum.net</a>
+               · GitHub: <a href="https://github.com/givpro22" target="_blank" rel="noopener">givpro22</a></p>
+            <p>&copy; 2026 박영서(ParkYoungSeo) 포트폴리오 · HTML · CSS · JavaScript 로 제작</p>
+        </footer>
     </div>
+
+    <button class="to-top" aria-label="맨 위로">↑</button>
+
+    <!-- 페이지 전용 스크립트: 타이핑 효과 + 이미지 슬라이더 -->
+    <script>
+        // 타이핑 효과
+        (function typing() {
+            var words = ["나의 유니버스", "SKALA FRONT", "Welcome!"];
+            var el = document.getElementById("typed");
+            if (!el) return;
+            var wi = 0, ci = 0, deleting = false;
+            function loop() {
+                var word = words[wi];
+                el.textContent = word.slice(0, ci);
+                if (!deleting && ci < word.length) {
+                    ci++;
+                    setTimeout(loop, 130);
+                } else if (deleting && ci > 0) {
+                    ci--;
+                    setTimeout(loop, 70);
+                } else if (!deleting && ci === word.length) {
+                    deleting = true;
+                    setTimeout(loop, 1400);
+                } else {
+                    deleting = false;
+                    wi = (wi + 1) % words.length;
+                    setTimeout(loop, 300);
+                }
+            }
+            loop();
+        })();
+
+        // 이미지 슬라이더
+        (function slider() {
+            var slides = [
+                { src: "media/trip1.jpg", cap: "중국 리장 호도협 (2025년 촬영)" },
+                { src: "media/trip2.jpg", cap: "필리핀 세부 탑스힐 (2024년 촬영)" },
+                { src: "media/trip3.jpg", cap: "일본 홋카이도 대설산 (2025년 촬영)" }
+            ];
+            var idx = 0;
+            var img = document.getElementById("slide");
+            var cap = document.getElementById("slideCaption");
+            function render() {
+                img.style.opacity = 0;
+                setTimeout(function () {
+                    img.src = slides[idx].src;
+                    cap.textContent = slides[idx].cap;
+                    img.style.opacity = 1;
+                }, 150);
+            }
+            img.style.transition = "opacity 0.3s";
+            document.getElementById("nextBtn").addEventListener("click", function () {
+                idx = (idx + 1) % slides.length; render();
+            });
+            document.getElementById("prevBtn").addEventListener("click", function () {
+                idx = (idx - 1 + slides.length) % slides.length; render();
+            });
+            // 5초마다 자동 전환
+            setInterval(function () { idx = (idx + 1) % slides.length; render(); }, 5000);
+        })();
+    </script>
 </body>
 </html>
