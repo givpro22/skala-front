@@ -1,0 +1,175 @@
+/* ============================================
+   SKALA-FRONT 공통 스타일
+   미션1: 전체 테마 및 텍스트 Styling
+   미션2: 박스 모델 (container / trip-card / table)
+   미션3: 가독성 높은 회원가입 폼
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+/* ---------- 미션1: 전체 테마 ---------- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Noto Sans KR", sans-serif;
+    line-height: 1.7;
+    color: #333333;
+    background-color: #eef2f7;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    color: #1a5276;
+    font-size: 2rem;
+    padding: 16px 20px;
+    background-color: #eaf2f8;
+    border-bottom: 4px solid #2980b9;
+    border-radius: 8px;
+}
+
+h2 {
+    color: #21618c;
+    font-size: 1.4rem;
+    padding: 8px 14px;
+    margin-top: 32px;
+    border-left: 6px solid #2ecc71;
+}
+
+h3 {
+    color: #2874a6;
+}
+
+a {
+    color: #2980b9;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: #e74c3c;
+    text-decoration: underline;
+}
+
+/* ---------- 미션2: 박스 모델 - 전체 컨테이너 ---------- */
+.container {
+    max-width: 900px;
+    margin: 0 auto;              /* 좌우 자동 → 가운데 정렬 */
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* myTrip - 리뷰 카드 */
+.trip-card {
+    background-color: #fbfcfd;
+    border: 1px solid #d5dbdb;
+    border-radius: 10px;
+    padding: 16px;
+    margin: 20px 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.trip-card img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.trip-card figcaption {
+    margin-top: 10px;
+    font-weight: 700;
+    color: #566573;
+}
+
+/* myClass - 테이블 */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+}
+
+th,
+td {
+    border: 1px solid #d5dbdb;
+    padding: 12px 10px;
+    text-align: center;
+}
+
+thead th {
+    background-color: #2980b9;
+    color: #ffffff;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f7fb;
+}
+
+/* ---------- 미션3: 회원가입 폼 ---------- */
+fieldset {
+    border: 2px solid #aed6f1;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+}
+
+legend {
+    font-weight: 700;
+    color: #1a5276;
+    padding: 0 10px;
+    font-size: 1.1rem;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+select,
+textarea {
+    padding: 10px 12px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    margin: 4px 0;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 260px;
+}
+
+textarea {
+    width: 100%;
+    resize: vertical;
+}
+
+input[type="submit"],
+input[type="reset"] {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+input[type="submit"] {
+    background-color: #27ae60;
+    color: #ffffff;
+}
+
+input[type="submit"]:hover {
+    background-color: #1e8449;
+}
+
+input[type="reset"] {
+    background-color: #bdc3c7;
+    color: #ffffff;
+}
+
+input[type="reset"]:hover {
+    background-color: #99a3a4;
+}
