@@ -36,6 +36,7 @@ function toggleTheme() {
         root.setAttribute("data-theme", "light");
         localStorage.setItem("skala-theme", "light");
     }
+    if (window.unlock) window.unlock("theme");
     updateThemeIcon();
 }
 
@@ -136,12 +137,14 @@ function injectStatusBar() {
             '<span class="sb">✓ 0  ✕ 0</span>' +
             '<span class="sb kbd" data-cmdk title="명령 팔레트 열기">⌘K 명령</span>' +
             '<span class="sb kbd help" data-hint title="단축키 &amp; 숨은 기능 보기">? 도움말</span>' +
+            '<span class="sb kbd" data-ambient title="배경 캐릭터 설정 (클릭)">✨ 배경</span>' +
+            '<span class="sb ach kbd" id="achBadge" title="업적 보기 (클릭)">🏆 0/9</span>' +
         '</div>' +
         '<div class="right">' +
             '<span class="sb">UTF-8</span>' +
             '<span class="sb">HTML</span>' +
             '<span class="sb accent2" id="sbClock">--:--:--</span>' +
-            '<span class="sb">Ln 1, Col 1</span>' +
+            '<span class="sb" id="sbCoord" title="클릭한 위치의 좌표">Ln 1, Col 1</span>' +
         '</div>';
     document.body.appendChild(bar);
 
@@ -165,6 +168,24 @@ function injectStatusBar() {
     if (hintBtn) hintBtn.addEventListener("click", function () {
         if (typeof window.showFeatureHint === "function") window.showFeatureHint();
     });
+
+    var ambBtn = bar.querySelector("[data-ambient]");
+    if (ambBtn) ambBtn.addEventListener("click", function () {
+        if (typeof window.openAmbientSettings === "function") window.openAmbientSettings();
+    });
+
+    var achBtn = bar.querySelector("#achBadge");
+    if (achBtn) achBtn.addEventListener("click", function () {
+        if (typeof window.openAchievements === "function") window.openAchievements();
+    });
+
+    // 클릭 위치를 에디터 좌표처럼 갱신 (Ln = y, Col = x)
+    document.addEventListener("click", function (e) {
+        var c = document.getElementById("sbCoord");
+        if (c) c.textContent = "Ln " + e.clientY + ", Col " + e.clientX;
+    });
+
+    if (typeof window.updateAchBadge === "function") window.updateAchBadge();
 }
 
 /* ---------- 커맨드 팔레트 (⌘K / Ctrl+K) ---------- */
@@ -177,6 +198,9 @@ var CMDK_ITEMS = [
     { label: "회원가입", hint: "signUp.html", icon: "📝", href: "signUp.html" },
     { label: "테마 전환 (다크 / 라이트)", hint: "theme", icon: "🌓", action: "theme" },
     { label: "매트릭스 효과 실행", hint: "matrix", icon: "🟦", action: "matrix" },
+    { label: "업적 보기", hint: "achievements", icon: "🏆", action: "ach" },
+    { label: "사용법 안내 보기", hint: "tutorial help", icon: "❔", action: "help" },
+    { label: "배경 캐릭터 설정 (밀도)", hint: "ambient background density", icon: "✨", action: "ambient" },
     { label: "맨 위로 스크롤", hint: "scroll top", icon: "⬆️", action: "top" },
     { label: "GitHub 프로필 열기", hint: "github.com/givpro22", icon: "🔗", href: "https://github.com/givpro22", external: true }
 ];
@@ -270,6 +294,15 @@ function runCmdk(item) {
     else if (item.action === "matrix") {
         if (typeof window.runMatrix === "function") { window.runMatrix(); showToast("> DEVELOPER MODE"); }
     }
+    else if (item.action === "ach") {
+        if (typeof window.openAchievements === "function") window.openAchievements();
+    }
+    else if (item.action === "help") {
+        if (typeof window.showFeatureHint === "function") window.showFeatureHint();
+    }
+    else if (item.action === "ambient") {
+        if (typeof window.openAmbientSettings === "function") window.openAmbientSettings();
+    }
     else if (item.action === "top") { window.scrollTo({ top: 0, behavior: "smooth" }); }
     else if (item.href && item.external) { window.open(item.href, "_blank", "noopener"); }
     else if (item.href) { location.href = item.href; }
@@ -278,6 +311,7 @@ function runCmdk(item) {
 function openCmdk() {
     var overlay = document.getElementById("cmdkOverlay");
     if (!overlay) return;
+    if (window.unlock) window.unlock("palette");
     cmdkState.open = true;
     overlay.classList.add("open");
     renderCmdk("");

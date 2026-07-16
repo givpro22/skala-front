@@ -3,10 +3,13 @@
 > SK AX SKALA — **Full-Stack Engineering (HTML · CSS · JavaScript)** 종합 실습 프로젝트
 > 하나의 개인 포털 사이트를 **개발자 터미널 / IDE 컨셉**으로 구현했습니다.
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-▶_바로가기-000000?style=flat-square&logo=vercel&logoColor=white)](https://skala-front-ys.vercel.app/)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
 ![No Dependencies](https://img.shields.io/badge/dependencies-0-success?style=flat-square)
+
+**🔗 라이브 데모: https://skala-front-ys.vercel.app/**
 
 ---
 
@@ -15,9 +18,11 @@
 `SKALA-FRONT`는 개인의 프로필 · 강의 일정 · 휴일 계획 · 여행 앨범 · 회원가입 기능을
 하나로 모은 **포털형 웹사이트**입니다.
 시맨틱 마크업 위에 **VS Code 다크 테마 감성**의 스타일링과 다양한 **바닐라 JavaScript
-인터랙션**을 얹어, 정적인 과제를 넘어 실제 동작하는 웹앱처럼 완성했습니다.
+인터랙션**(인터랙티브 터미널 · 업적 시스템 · 이스터에그)을 얹어, 정적인 과제를 넘어
+실제 동작하는 웹앱처럼 완성했습니다.
 
 - **작성자**: 박영서 (Park Youngseo) · Full-stack Developer
+- **라이브 데모**: [skala-front-ys.vercel.app](https://skala-front-ys.vercel.app/) (Vercel 배포)
 - **저장소**: [github.com/givpro22/skala-front](https://github.com/givpro22/skala-front)
 - **외부 라이브러리·CDN 0개** — 순수 HTML · CSS · JavaScript 로만 구현
 
@@ -29,7 +34,7 @@
 |------|-----------|
 | Markup | HTML5 (Semantic Elements, Forms, Media, Table) |
 | Style | CSS3 (변수 · 다크/라이트 · 애니메이션 · Flex/Grid · 반응형) |
-| Script | Vanilla JavaScript (DOM · 이벤트 · localStorage · Canvas · IntersectionObserver) |
+| Script | Vanilla JavaScript (DOM · 이벤트 · localStorage · Canvas · Fetch · IntersectionObserver) |
 | Font | OS 기본 모노스페이스 폰트 (외부 폰트 미사용) |
 | Tool | VS Code, Live Server |
 
@@ -39,23 +44,27 @@
 
 ```
 skala-front/
+├── index.html              # Vercel 배포용 루트 → /html/index.html 리다이렉트
 ├── README.md
 ├── css/
-│   └── style.css          # 전체 공통 스타일 (IDE 테마 · 애니메이션 · 반응형)
+│   └── style.css           # 전체 공통 스타일 (IDE 테마 · 애니메이션 · 반응형)
 ├── js/
-│   ├── common.js          # 테마 토글 · 상태바 · 명령 팔레트 · 스크롤 애니메이션
-│   ├── effects.js         # 부팅 화면 · 페이지 전환 · 틸트 · 코나미 · 도움말
-│   ├── signup.js          # 회원가입 폼 실시간 검증
-│   └── result.js          # 제출값 요약 · 컨페티
+│   ├── common.js           # 테마 · 상태바 · 명령 팔레트 · 스크롤 애니메이션
+│   ├── effects.js          # 부팅 화면 · 페이지 전환 · 틸트 · 튜토리얼 · 히트맵
+│   ├── terminal.js         # 인터랙티브 터미널 (명령어 인터프리터)
+│   ├── achievements.js     # 업적 시스템 (해금 · 폭죽 · 패널)
+│   ├── ambient.js          # 배경 코드 글리프 (상호작용 · 밀도 설정)
+│   ├── signup.js           # 회원가입 폼 실시간 검증
+│   └── result.js           # 제출값 요약 · 컨페티
 └── html/
-    ├── index.html         # 메인 포털 (터미널 히어로)
-    ├── myProfile.html     # 소개 (탭 · 이력 · 프로젝트 · 스킬)
-    ├── myClass.html       # 강의 시간표 (셀 병합 · 오늘 요일 강조)
-    ├── holiday.html       # 휴일 일과 (타임라인 · details)
-    ├── myTrip.html        # 여행 앨범 (갤러리 · 라이트박스 · 미디어)
-    ├── signUp.html        # 회원가입 폼
-    ├── signUpResult.html  # 회원가입 결과
-    └── media/             # 사진 · 음악 · 영상 (플레이스홀더 포함)
+    ├── index.html          # 메인 포털 (인터랙티브 터미널)
+    ├── myProfile.html      # 소개 (통계 · 활동 그래프 · 탭)
+    ├── myClass.html        # 강의 시간표 (셀 병합 · 오늘 요일 강조)
+    ├── holiday.html        # 휴일 일과 (타임라인 · details)
+    ├── myTrip.html         # 여행 앨범 (갤러리 · 라이트박스 · 미디어)
+    ├── signUp.html         # 회원가입 폼
+    ├── signUpResult.html   # 회원가입 결과
+    └── media/              # 사진 · 음악 · 영상 (플레이스홀더 포함)
 ```
 
 ---
@@ -65,29 +74,43 @@ skala-front/
 - **VS Code 다크 테마** 기반 · 우측 상단 버튼으로 **라이트 테마 토글** (localStorage 저장)
 - 모노스페이스 폰트 + `$` `#` 프롬프트 스타일 헤딩 + 문법 강조 색상(블루 계열)
 - 상단 **에디터 탭바**, 컨테이너마다 **파일명 탭**(`index.html` 등)
-- 화면 하단 **VS Code 스타일 상태바** (git 브랜치 · 인코딩 · 실시간 시계)
+- 화면 하단 **VS Code 스타일 상태바** (git 브랜치 · 인코딩 · 실시간 시계 · 업적 진행도)
+  · 클릭 가능 항목(도움말 · 배경 설정 · 업적) + **클릭 위치 좌표**(`Ln, Col`) 실시간 표시
 
 ---
 
-## JavaScript 인터랙션
+## 인터랙티브 터미널
 
-바닐라 JavaScript로 구현한 주요 동작입니다.
+메인 페이지 히어로가 **직접 명령어를 입력하는 터미널**입니다. `help` 로 시작하세요.
 
-| 기능 | 설명 | 위치 |
-|------|------|------|
-| 명령 팔레트 | `⌘K` / `Ctrl+K` — 페이지 이동 · 테마 전환 · 검색 | 전체 |
-| 인트로 부팅 화면 | 첫 진입 시 터미널 부팅 로그 타이핑 (세션 1회) | index |
-| 페이지 전환 효과 | 링크 클릭 시 페이드 + 상단 로딩바 | 전체 |
-| 스크롤 진행바 | 읽은 만큼 채워지는 상단 바 | 전체 |
-| 카드 3D 틸트 | 마우스 추적 입체 효과 | 카드 |
-| 터미널 타이핑 · 실시간 시계 | 히어로 타이핑 · `date` 시계 | index |
-| 탭 · 스킬 바 | 탭 전환, 프로그레스 애니메이션 | myProfile |
-| 오늘 요일 강조 · 셀 선택 | `Date` 기반 강조, 클릭 표시 | myClass |
-| 라이트박스 갤러리 | 사진 클릭 확대 | myTrip |
-| 실시간 폼 검증 | 아이디/비밀번호 검증 · 강도 미터 · 글자수 | signUp |
-| 제출값 요약 · 컨페티 | URL 쿼리 파싱으로 입력값 표시 | signUpResult |
-| 이스터에그 | `↑↑↓↓` 또는 팔레트 → 매트릭스 레인 | 전체 |
-| 도움말 팝업/버튼 | 단축키 안내 (플로팅 버튼 · 상태바) | 전체 |
+| 명령어 | 동작 |
+|--------|------|
+| `about` `skills` `projects` | 자기소개 · 기술 스택 · 프로젝트 |
+| `awards` `certs` `contact` | 수상 · 자격증 · 연락처 |
+| `ls` · `goto <page>` | 페이지 목록 · 이동 |
+| `neofetch` | 개발자 정보 ASCII 아트 |
+| `cowsay <말>` · `rps <가위\|바위\|보>` | ASCII 소 · 가위바위보 게임 |
+| `joke` `coffee` `sudo` | 유머 · 커피 · xkcd 개그 |
+| `theme` `matrix` `achievements` | 테마 전환 · 이스터에그 · 업적 목록 |
+
+- `↑` / `↓` 명령 히스토리, `clear` 초기화, 없는 명령 처리
+
+---
+
+## 업적 시스템 & 기타 인터랙션
+
+| 기능 | 설명 |
+|------|------|
+| 업적 시스템 | 탐험하며 **숨은 업적 해금** → 폭죽 + 배너(설명·달성 방법), 하단 🏆 클릭 시 전체 목록 |
+| 배경 코드 글리프 | `</>` `{ }` `=>` 등이 배경을 유영 · **마우스 근처면 밀려나며 밝아지고 클릭 시 퍼짐** · 밀도 설정(끄기/적게/보통/많이) |
+| 첫 방문 튜토리얼 | 처음 접속 시 사용법 안내 모달 (재열람: 우측 하단 `?` 버튼) |
+| 명령 팔레트 | `⌘K` / `Ctrl+K` — 페이지 이동 · 테마 · 업적 · 검색 |
+| 인트로 부팅 화면 | 첫 진입 시 터미널 부팅 로그 타이핑 (세션 1회) |
+| 페이지 전환 · 스크롤 진행바 | 페이드 + 상단 로딩바, 읽은 만큼 채워지는 바 |
+| 카드 3D 틸트 | 마우스 추적 입체 효과 |
+| 통계 카운터 · 활동 그래프 | 소개 페이지 숫자 카운트업, **GitHub 실제 커밋 히트맵** |
+| 이스터에그 | `↑↑↓↓` → 매트릭스 레인 |
+| 폼 검증 · 라이트박스 · 시간표 강조 | 실시간 검증, 사진 확대, 오늘 요일 자동 강조 |
 
 ---
 
@@ -114,8 +137,14 @@ skala-front/
 2. VS Code에서 폴더를 엽니다.
 3. `html/index.html`을 열고 **Live Server** (우측 하단 `Go Live`)로 실행합니다.
 
-> 첫 진입 시 부팅 화면, `⌘K` 명령 팔레트, `↑↑↓↓` 이스터에그를 확인해 보세요.
-> 미디어(`html/media/`)는 플레이스홀더가 채워져 있으며, 실제 파일로 교체하면 반영됩니다.
+> 처음 들어가면 튜토리얼이 뜹니다. 터미널에 `help`, `⌘K` 명령 팔레트, `↑↑↓↓` 이스터에그,
+> 그리고 사이트를 돌아다니며 업적을 해금해 보세요.
+> GitHub 활동 그래프는 외부 요청이 있어 `file://` 보다 **Live Server**에서 안정적으로 동작합니다.
+
+### Vercel 배포
+- **배포 완료**: [skala-front-ys.vercel.app](https://skala-front-ys.vercel.app/)
+- 루트 `index.html`이 `/html/index.html`로 리다이렉트하도록 되어 있어, 저장소를 그대로 임포트하면 됩니다.
+- Framework Preset: **Other**, Root Directory: `./`, Build/Output: 비워두기.
 
 ---
 
@@ -140,4 +169,6 @@ skala-front/
 - [x] CSS 변수 · 다크/라이트 테마 전환
 - [x] 애니메이션 · 트랜지션 · 화면 전환 효과
 - [x] Flexbox · Grid 레이아웃 · 반응형 (Media Query)
-- [x] JavaScript 인터랙션 (명령 팔레트 · 폼 검증 · 라이트박스 · 이스터에그 등)
+- [x] 인터랙티브 터미널 · 명령 팔레트
+- [x] 업적 시스템 · 튜토리얼 · 이스터에그
+- [x] GitHub 활동 그래프 (Fetch API)

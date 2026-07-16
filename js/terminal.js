@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var history = [];
     var hpos = -1;
+    var cmdCount = 0;
 
     function esc(s) {
         return String(s).replace(/[&<>"]/g, function (c) {
@@ -51,6 +52,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 ["goto <page>", "페이지 이동 (예: goto trip)"],
                 ["theme", "다크/라이트 전환"],
                 ["matrix", "매트릭스 이스터에그"],
+                ["neofetch", "개발자 정보 아트"],
+                ["cowsay <말>", "소가 말하게 하기"],
+                ["rps <가위|바위|보>", "가위바위보 게임"],
+                ["joke", "개발자 유머"],
+                ["coffee", "커피 한 잔"],
+                ["achievements", "업적 목록"],
                 ["date", "현재 시각"],
                 ["clear", "화면 지우기"]
             ];
@@ -105,12 +112,87 @@ document.addEventListener("DOMContentLoaded", function () {
             print("이동 중... → " + target, "muted");
             setTimeout(function () { location.href = target; }, 400);
         },
-        theme: function () { if (typeof toggleTheme === "function") toggleTheme(); print("테마를 전환했어요."); },
+        theme: function () { if (typeof toggleTheme === "function") toggleTheme(); if (window.unlock) window.unlock("theme"); print("테마를 전환했어요."); },
         matrix: function () { if (typeof window.runMatrix === "function") window.runMatrix(); print("실행 중... (화면 클릭 시 종료)", "muted"); },
         date: function () { print(new Date().toLocaleString("ko-KR")); },
         echo: function (arg) { print(esc(arg)); },
         whoami: function () { print("guest@skala — 방문객님 환영합니다."); },
-        sudo: function () { print("권한이 거부되었습니다. 개발자 본인이 아니시군요.", "err"); },
+
+        neofetch: function () {
+            var art =
+                "<span class='t-logo'>██████╗ </span>  <b>guest</b>@<b>skala-front</b>\n" +
+                "<span class='t-logo'>██╔══██╗</span>  ──────────────────\n" +
+                "<span class='t-logo'>██████╔╝</span>  host  : 박영서 (Park Youngseo)\n" +
+                "<span class='t-logo'>██╔═══╝ </span>  role  : Full-stack Developer\n" +
+                "<span class='t-logo'>██║     </span>  stack : JS/TS · React · Next.js\n" +
+                "<span class='t-logo'>╚═╝     </span>  info  : proj 3 · award 4 · cert 5\n" +
+                "<span class='t-logo'>        </span>  editor: VS Code · theme: dark";
+            print(art, "pre");
+        },
+        cowsay: function (arg) {
+            var msg = (arg || "").trim() || "Hello, SKALA!";
+            var top = " " + "_".repeat(msg.length + 2);
+            var bot = " " + "-".repeat(msg.length + 2);
+            var cow =
+                "        \\   ^__^\n" +
+                "         \\  (oo)\\_______\n" +
+                "            (__)\\       )\\/\\\n" +
+                "                ||----w |\n" +
+                "                ||     ||";
+            print(esc(top) + "\n< " + esc(msg) + " >\n" + esc(bot) + "\n" + cow, "pre");
+        },
+        rps: function (arg) {
+            if (window.unlock) window.unlock("gamer");
+            var map = { "가위": "scissors", "바위": "rock", "보": "paper",
+                        rock: "rock", paper: "paper", scissors: "scissors", r: "rock", p: "paper", s: "scissors" };
+            var you = map[(arg || "").trim().toLowerCase()];
+            if (!you) { print("사용법: rps 가위 | 바위 | 보  (rock | paper | scissors)", "muted"); return; }
+            var opts = ["rock", "paper", "scissors"];
+            var cpu = opts[Math.floor(Math.random() * 3)];
+            var emo = { rock: "✊", paper: "✋", scissors: "✌️" };
+            print("You: " + emo[you] + "   CPU: " + emo[cpu]);
+            var res;
+            if (you === cpu) res = "비겼어요!";
+            else if ((you === "rock" && cpu === "scissors") ||
+                     (you === "paper" && cpu === "rock") ||
+                     (you === "scissors" && cpu === "paper")) res = "이겼어요! 🎉";
+            else res = "졌어요... 😢";
+            print(res, "accent");
+        },
+        joke: function () {
+            var jokes = [
+                "Q: 프로그래머가 어둠을 싫어하는 이유는? A: 버그(bug)가 꼬여서.",
+                "0.1 + 0.2 는? → 0.30000000000000004",
+                "세상엔 10종류의 사람이 있다. 이진법을 아는 사람과 모르는 사람.",
+                "Q: 개발자가 자연을 싫어하는 이유? A: 버그가 너무 많아서."
+            ];
+            print(jokes[Math.floor(Math.random() * jokes.length)]);
+        },
+        coffee: function () {
+            print("      ( (\n       ) )\n    ........\n    |      |]\n    \\      /\n     `----'    ☕ 커피 한 잔 하고 가세요!", "pre");
+        },
+        vim: function () {
+            print("Vim 실행됨... 나가려면 :q (여긴 진짜 갇히는 곳은 아니니 안심하세요)", "muted");
+        },
+        history: function () {
+            if (!history.length) { print("기록이 없어요.", "muted"); return; }
+            history.forEach(function (h, i) { print("  " + (i + 1) + "  " + esc(h)); });
+        },
+        achievements: function () {
+            if (typeof window.getAchievements !== "function") { print("업적 시스템을 불러올 수 없어요.", "err"); return; }
+            var list = window.getAchievements();
+            var got = list.filter(function (a) { return a.unlocked; }).length;
+            print("🏆 업적 " + got + " / " + list.length + " 해금", "accent");
+            list.forEach(function (a) {
+                var mark = a.unlocked ? a.icon : "🔒";
+                print(mark + " <span class='t-cmd'>" + esc(a.title) + "</span><span class='t-desc'>" +
+                      (a.unlocked ? esc(a.desc) : "???") + "</span>", a.unlocked ? "" : "muted");
+            });
+        },
+        sudo: function (arg) {
+            if (/sandwich/i.test(arg || "")) { print("좋아요. 여기 샌드위치입니다. 🥪  (xkcd #149)", "accent"); return; }
+            print("권한이 거부되었습니다. 이 포트폴리오의 주인이 아니시군요.", "err");
+        },
         clear: function () { output.innerHTML = ""; }
     };
 
@@ -119,6 +201,9 @@ document.addEventListener("DOMContentLoaded", function () {
         print('<span class="prompt">➜</span> <span class="path">~/skala-front</span> ' + esc(cmd));
         if (!cmd) return;
         history.push(cmd); hpos = history.length;
+        if (window.unlock) window.unlock("rookie");
+        cmdCount++;
+        if (cmdCount >= 15 && window.unlock) window.unlock("master");
         var parts = cmd.split(/\s+/);
         var name = parts[0].toLowerCase();
         var arg = parts.slice(1).join(" ");

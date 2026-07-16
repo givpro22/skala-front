@@ -191,49 +191,60 @@
         document.body.appendChild(b);
     }
 
-    /* ---------- 숨은 기능 안내 팝업 (메인, 세션당 1회) ---------- */
+    /* ---------- 첫 방문 튜토리얼 (홈, 영구 1회) ---------- */
     function featureHint() {
         if (!isHome) return;
-        if (sessionStorage.getItem("skala-hint")) return;
-        // 부팅 화면이 끝날 시간을 고려해 지연
-        var delay = sessionStorage.getItem("skala-booted") ? 900 : 2900;
-        setTimeout(buildHint, delay);
+        if (localStorage.getItem("skala-welcomed")) return;
+        var delay = sessionStorage.getItem("skala-booted") ? 700 : 2800;
+        setTimeout(function () {
+            localStorage.setItem("skala-welcomed", "1");
+            showTutorial();
+        }, delay);
     }
 
-    function buildHint() {
-        if (document.getElementById("hintPop")) return;
-        var pop = document.createElement("div");
-        pop.className = "hint-pop";
-        pop.id = "hintPop";
-        pop.innerHTML =
-            '<div class="hint-head"><span>단축키 &amp; 숨은 기능</span>' +
-                '<button class="hint-close" aria-label="닫기">&times;</button></div>' +
-            '<div class="hint-body">' +
-                '<div class="hint-row">' +
-                    '<div class="hint-keys"><kbd>⌘</kbd><kbd>K</kbd>' +
-                        '<span style="color:var(--text-soft);font-size:.78rem;margin-left:4px">/ Ctrl+K</span></div>' +
-                    '<div class="hint-desc">명령 팔레트 — 페이지 이동 · 테마 전환</div>' +
+    function tutStep(icon, keys, desc) {
+        return '<div class="tut-step"><span class="tut-ic">' + icon + '</span>' +
+            '<div><div class="tut-keys">' + keys + '</div>' +
+            '<div class="tut-desc">' + desc + '</div></div></div>';
+    }
+
+    function showTutorial() {
+        if (document.getElementById("tutOv")) return;
+        var ov = document.createElement("div");
+        ov.className = "tut-ov";
+        ov.id = "tutOv";
+        ov.innerHTML =
+            '<div class="tut-modal" role="dialog" aria-label="사용법 안내">' +
+                '<div class="tut-head">' +
+                    '<span>👋 환영합니다 · SKALA·FRONT 사용법</span>' +
+                    '<button class="tut-close" aria-label="닫기">&times;</button>' +
                 '</div>' +
-                '<div class="hint-row">' +
-                    '<div class="hint-keys"><kbd>↑</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>↓</kbd></div>' +
-                    '<div class="hint-desc">코나미 코드 — 매트릭스 이스터에그 실행</div>' +
+                '<div class="tut-body">' +
+                    '<p class="tut-intro">개발자 IDE 컨셉의 인터랙티브 포트폴리오예요. 이렇게 즐겨보세요:</p>' +
+                    tutStep("⌨️", '<kbd>⌘K</kbd> <kbd>Ctrl+K</kbd>', "명령 팔레트 — 페이지 이동 · 테마 · 검색") +
+                    tutStep("💻", '터미널에 <b>help</b> 입력', "숨은 명령어 — neofetch · rps 게임 · cowsay 등") +
+                    tutStep("🏆", '탐험하며 <b>숨은 업적</b> 해금', "하단 금색 🏆 를 눌러 목록 · 달성 방법 확인") +
+                    tutStep("🕹️", '<kbd>↑</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>↓</kbd>', "매트릭스 이스터에그") +
+                    tutStep("🌙", '우측 상단 버튼', "다크 / 라이트 테마 전환") +
                 '</div>' +
-                '<button class="hint-try btn btn-primary" id="hintTry">지금 ⌘K 열어보기</button>' +
+                '<div class="tut-foot">' +
+                    '<span class="tut-note">이 안내는 우측 하단 <b>?</b> 버튼으로 다시 볼 수 있어요</span>' +
+                    '<button class="btn btn-primary tut-start">시작하기</button>' +
+                '</div>' +
             '</div>';
-        document.body.appendChild(pop);
-        requestAnimationFrame(function () { pop.classList.add("show"); });
-        sessionStorage.setItem("skala-hint", "1");
+        document.body.appendChild(ov);
 
         function close() {
-            pop.classList.remove("show");
-            setTimeout(function () { if (pop.parentNode) pop.remove(); }, 350);
+            ov.classList.remove("show");
+            document.removeEventListener("keydown", onKey);
+            setTimeout(function () { if (ov.parentNode) ov.remove(); }, 250);
         }
-        pop.querySelector(".hint-close").addEventListener("click", close);
-        pop.querySelector("#hintTry").addEventListener("click", function () {
-            close();
-            if (typeof window.openCmdk === "function") window.openCmdk();
-        });
-        setTimeout(close, 14000); // 14초 후 자동 닫힘
+        function onKey(e) { if (e.key === "Escape") close(); }
+        ov.addEventListener("click", function (e) { if (e.target === ov) close(); });
+        ov.querySelector(".tut-close").addEventListener("click", close);
+        ov.querySelector(".tut-start").addEventListener("click", close);
+        document.addEventListener("keydown", onKey);
+        requestAnimationFrame(function () { ov.classList.add("show"); });
     }
 
     /* ---------- 스크롤 진행바 (겸 네비 로딩바) ---------- */
@@ -307,6 +318,7 @@
             pos = (e.keyCode === seq[pos]) ? pos + 1 : (e.keyCode === seq[0] ? 1 : 0);
             if (pos === seq.length) {
                 pos = 0;
+                if (window.unlock) window.unlock("konami");
                 matrixRain();
                 if (typeof showToast === "function") showToast("> DEVELOPER MODE UNLOCKED");
             }
@@ -314,6 +326,7 @@
     }
 
     function matrixRain() {
+        if (window.unlock) window.unlock("matrix");
         if (document.getElementById("matrixCanvas")) return;
         var canvas = document.createElement("canvas");
         canvas.id = "matrixCanvas";
@@ -376,8 +389,7 @@
 
     // 안내 팝업을 언제든 다시 열기 (상태바 "? 도움말" 버튼 등에서 호출)
     window.showFeatureHint = function () {
-        var ex = document.getElementById("hintPop");
-        if (ex) ex.remove();
-        buildHint();
+        if (window.unlock) window.unlock("helper");
+        showTutorial();
     };
 })();
