@@ -22,10 +22,10 @@
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="테마 전환">🌙</button>
     </header>
 
-    <div class="container">
-        <h1>📅 나의 강의 시간표</h1>
+    <div class="container" data-file="myClass.html">
+        <h1>나의 강의 시간표</h1>
         <p id="todayMsg" class="badge">오늘 요일을 확인하는 중...</p>
-        <p><small>💡 표의 칸을 클릭하면 형광펜으로 표시되고, 오늘 요일은 자동으로 강조됩니다.</small></p>
+        <p><small>표의 칸을 클릭하면 형광펜으로 표시되고, 오늘 요일은 자동으로 강조됩니다.</small></p>
 
         <table>
             <caption style="caption-side:top;font-weight:700;color:var(--brand-dark);padding-bottom:8px;">
@@ -60,7 +60,7 @@
                 </tr>
                 <tr>
                     <td>12:00 - 13:00</td>
-                    <td colspan="5" class="lunch">🍚 점 심 시 간 🍚</td>
+                    <td colspan="5" class="lunch">점 심 시 간 </td>
                 </tr>
                 <tr>
                     <td>13:00 - 14:00</td>
@@ -92,7 +92,7 @@
         </table>
 
         <aside data-reveal>
-            <h2>📖 시간표 안내</h2>
+            <h2>시간표 안내</h2>
             <ul>
                 <li>매일 <mark>12:00 ~ 13:00</mark> 은 점심시간입니다.</li>
                 <li>회색으로 강조된 세로 줄이 <strong>오늘</strong> 요일입니다.</li>
@@ -110,11 +110,11 @@
             var today = new Date().getDay(); // 0~6
             var msg = document.getElementById("todayMsg");
             if (today >= 1 && today <= 5) {
-                msg.textContent = "📌 오늘은 " + days[today] + "요일입니다!";
+                msg.textContent = "오늘은 " + days[today] + "요일입니다!";
                 var th = document.querySelector('thead th[data-day="' + today + '"]');
                 if (th) th.classList.add("today-col");
             } else {
-                msg.textContent = "🎉 오늘은 " + days[today] + "요일, 주말입니다!";
+                msg.textContent = "오늘은 " + days[today] + "요일, 주말입니다!";
             }
         })();
 

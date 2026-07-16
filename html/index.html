@@ -23,47 +23,61 @@
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="테마 전환">🌙</button>
     </header>
 
-    <div class="container">
-        <!-- 히어로: 타이핑 효과 + 실시간 시계 -->
-        <section class="hero">
-            <h1>🚀 <span id="typed"></span><span class="cursor">&nbsp;</span></h1>
-            <p class="subtitle">박영서(Park Youngseo)의 프로필 · 학습 내용 · 여행 기록을 모아둔 Hub 페이지입니다.</p>
-            <div class="clock-badge" id="clock">🕒 로딩 중...</div>
+    <div class="container" data-file="index.html">
+        <!-- 히어로: 터미널 창 -->
+        <section class="terminal">
+            <div class="term-bar">
+                <span class="tl red"></span><span class="tl yellow"></span><span class="tl green"></span>
+                <span class="term-title">park@skala: ~/skala-front — zsh</span>
+            </div>
+            <div class="term-body">
+                <p><span class="prompt">➜</span> <span class="path">~/skala-front</span> whoami</p>
+                <p><span class="big" id="typed"></span><span class="cursor"></span></p>
+                <p><span class="prompt">➜</span> <span class="path">~/skala-front</span> figlet PARK</p>
+<pre class="ascii"> ____   _    ____  _  __
+|  _ \ / \  |  _ \| |/ /
+| |_) / _ \ | |_) | ' /
+|  __/ ___ \|  _ &lt;| . \
+|_| /_/   \_\_| \_\_|\_\</pre>
+                <p><span class="prompt">➜</span> <span class="path">~/skala-front</span> cat <span class="flag">about.txt</span></p>
+                <p class="comment"># 박영서(Park Youngseo) · Frontend Developer</p>
+                <p class="comment"># 프로필 · 학습 · 여행 기록을 모아둔 포털 사이트</p>
+                <p><span class="prompt">➜</span> <span class="path">~/skala-front</span> date</p>
+                <p><span class="clock-badge" id="clock">로딩 중...</span></p>
+                <p class="comment"># Tip: <strong style="color:#79c0ff">⌘K</strong> (또는 Ctrl+K) 로 명령 팔레트를 열어보세요</p>
+            </div>
         </section>
 
         <!-- 바로가기 (p.67 요구사항: a 내비게이션) -->
         <nav class="page-nav" data-reveal>
-            <h2>📁 바로가기 메뉴</h2>
+            <h2>바로가기</h2>
             <ul>
-                <li><a href="myProfile.html">👤 소개 (Profile)</a></li>
-                <li><a href="myClass.html">📅 수업 시간표 (Class)</a></li>
-                <li><a href="holiday.html">🎉 휴일 계획 (Holiday)</a></li>
-                <li><a href="myTrip.html">🌏 여행 앨범 (Album)</a></li>
-                <li><a href="signUp.html">📝 회원가입 (Sign Up)</a></li>
+                <li><a href="myProfile.html">소개<span class="file">myProfile</span><span class="arw">›</span></a></li>
+                <li><a href="myClass.html">수업 시간표<span class="file">myClass</span><span class="arw">›</span></a></li>
+                <li><a href="holiday.html">휴일 계획<span class="file">holiday</span><span class="arw">›</span></a></li>
+                <li><a href="myTrip.html">여행 앨범<span class="file">myTrip</span><span class="arw">›</span></a></li>
+                <li><a href="signUp.html">회원가입<span class="file">signUp</span><span class="arw">›</span></a></li>
             </ul>
         </nav>
 
         <hr>
 
         <main>
-            <h2 data-reveal>📌 오늘의 주요 소식</h2>
+            <h2 data-reveal>오늘의 주요 소식</h2>
 
             <!-- 카드 그리드 (CSS Grid) -->
             <div class="card-grid">
                 <article class="info-card" data-reveal>
-                    <span class="icon">🆕</span>
                     <h3>여행 앨범 영상 추가</h3>
                     <p>홋카이도 대설산 아래에 브이로그 영상을 추가했습니다. 소리와 영상으로 여행을 추억하세요.</p>
                     <p><small>2026년 7월 15일</small></p>
                 </article>
                 <article class="info-card" data-reveal>
-                    <span class="icon">🎨</span>
                     <h3>다크 모드 지원</h3>
-                    <p>우측 상단 🌙 버튼으로 라이트/다크 테마를 전환할 수 있습니다. 설정은 자동 저장됩니다.</p>
+                    <p>우측 상단 테마 버튼으로 라이트/다크 테마를 전환할 수 있습니다. 설정은 자동 저장됩니다.</p>
                     <p><small>JavaScript · localStorage</small></p>
                 </article>
                 <article class="info-card" data-reveal>
-                    <span class="icon">📱</span>
                     <h3>반응형 디자인</h3>
                     <p>PC · 태블릿 · 모바일 어떤 화면에서도 최적화된 레이아웃으로 표시됩니다.</p>
                     <p><small>CSS Media Query</small></p>
@@ -72,7 +86,7 @@
 
             <!-- 이미지 슬라이더 -->
             <section data-reveal>
-                <h3>📷 이달의 베스트 컷</h3>
+                <h3>이달의 베스트 컷</h3>
                 <figure class="trip-card" style="max-width:420px;margin:16px auto;">
                     <img id="slide" src="media/trip1.jpg" alt="이달의 여행 사진">
                     <figcaption id="slideCaption">중국 리장 호도협 (2025년 촬영)</figcaption>
@@ -87,8 +101,8 @@
         <hr>
 
         <aside data-reveal>
-            <h2>🌠 실시간 정보</h2>
-            <p>현재 위치: 광주광역시 광산구 📍</p>
+            <h2>실시간 정보</h2>
+            <p>현재 위치: 광주광역시 광산구</p>
             <p>추천 학습 사이트:
                 <a href="https://www.w3schools.com" target="_blank" rel="noopener">W3Schools 온라인 명세서 ↗</a>
             </p>
@@ -107,7 +121,7 @@
     <script>
         // 타이핑 효과
         (function typing() {
-            var words = ["나의 유니버스", "SKALA FRONT", "Welcome!"];
+            var words = ["박영서", "Frontend Developer", "Park Youngseo"];
             var el = document.getElementById("typed");
             if (!el) return;
             var wi = 0, ci = 0, deleting = false;

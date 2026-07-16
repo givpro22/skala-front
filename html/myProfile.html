@@ -22,9 +22,8 @@
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="테마 전환">🌙</button>
     </header>
 
-    <div class="container">
-        <h1>👋 안녕하세요, 박영서입니다</h1>
-
+    <div class="container" data-file="myProfile.html">
+        <h1>안녕하세요, 박영서입니다</h1>
         <!-- 프로필 헤더 카드 -->
         <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;margin:20px 0;">
             <div style="width:110px;height:110px;border-radius:50%;overflow:hidden;
@@ -45,22 +44,22 @@
 
         <!-- 기본 정보 (ul) -->
         <ul style="list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:10px;">
-            <li class="badge">🎂 2001. 03. 21</li>
-            <li class="badge">📧 givpro22@daum.net</li>
-            <li class="badge">🔗 <a href="https://github.com/givpro22" target="_blank" rel="noopener">github.com/givpro22</a></li>
+            <li class="badge">2001. 03. 21</li>
+            <li class="badge">givpro22@daum.net</li>
+            <li class="badge"><a href="https://github.com/givpro22" target="_blank" rel="noopener">github.com/givpro22</a></li>
         </ul>
 
         <!-- 탭 -->
         <div class="tabs" role="tablist">
-            <button class="tab-btn active" data-tab="about">🙋 소개</button>
-            <button class="tab-btn" data-tab="history">🏆 이력</button>
-            <button class="tab-btn" data-tab="projects">💼 프로젝트</button>
-            <button class="tab-btn" data-tab="skills">📊 스킬</button>
+            <button class="tab-btn active" data-tab="about">소개</button>
+            <button class="tab-btn" data-tab="history">이력</button>
+            <button class="tab-btn" data-tab="projects">프로젝트</button>
+            <button class="tab-btn" data-tab="skills">스킬</button>
         </div>
 
         <!-- 탭 1: 소개 (dl + ol 인터랙티브) -->
         <section class="tab-panel active" id="about" role="tabpanel">
-            <h2>✨ 저는 이런 사람이에요</h2>
+            <h2>저는 이런 사람이에요</h2>
             <p>단순히 서비스를 만드는 메이커가 아닌, 서비스에 대해 깊게 생각하고 좋은 서비스를
                만들기 위해 고민하는 것을 좋아합니다. <strong>메이킹</strong>을 좋아해 사이드
                프로젝트로 꾸준히 만드는 활동을 이어가고 있습니다.</p>
@@ -74,7 +73,7 @@
                 <dd>로딩·에러·빈 화면·재시도 같은 예외 상황에서도 흐름이 끊기지 않는 설계를 중요하게 생각합니다.</dd>
             </dl>
 
-            <h2>🎯 2026년 목표</h2>
+            <h2>2026년 목표</h2>
             <ol id="todoList">
                 <li>사이드 프로젝트 1개 이상 정식 출시하기</li>
                 <li>새로운 프레임워크 깊이 있게 학습하기</li>
@@ -84,12 +83,12 @@
                 <input type="text" id="todoInput" placeholder="새로운 목표를 입력하세요">
                 <button class="btn btn-primary" id="addTodo">추가 ＋</button>
             </div>
-            <p><small>💡 JavaScript로 목표를 직접 추가할 수 있어요.</small></p>
+            <p><small>JavaScript로 목표를 직접 추가할 수 있어요.</small></p>
         </section>
 
         <!-- 탭 2: 이력 (timeline + ol + ul) -->
         <section class="tab-panel" id="history" role="tabpanel">
-            <h2>🎓 교육</h2>
+            <h2>교육</h2>
             <div class="timeline">
                 <div class="event">
                     <span class="time">2021.03 – 2026.08</span><br>
@@ -101,7 +100,7 @@
                 </div>
             </div>
 
-            <h2>🏆 수상</h2>
+            <h2>수상</h2>
             <ol>
                 <li>2025 전남대학교 소프트웨어중심대학 SW창업경진대회 <strong>최우수상</strong></li>
                 <li>2025 카카오테크캠퍼스 아이디어톤 <strong>우수상</strong></li>
@@ -109,7 +108,7 @@
                 <li>2021 전남대학교 창업아이템경진대회 <strong>입선</strong></li>
             </ol>
 
-            <h2>📜 자격증 &amp; 어학</h2>
+            <h2>자격증 &amp; 어학</h2>
             <ul>
                 <li>2026 <mark>빅데이터분석기사</mark></li>
                 <li>2026 토익스피킹 <strong>IH (Intermediate High)</strong></li>
@@ -121,10 +120,9 @@
 
         <!-- 탭 3: 프로젝트 -->
         <section class="tab-panel" id="projects" role="tabpanel">
-            <h2>💼 대표 프로젝트</h2>
-
+            <h2>대표 프로젝트</h2>
             <article class="info-card" style="margin-bottom:18px;">
-                <h3>🛵 발로뛰어 <small>(Project 1)</small></h3>
+                <h3>발로뛰어 <small>(Project 1)</small></h3>
                 <p>캠퍼스 내 사용자 간 배달 서비스 · <strong>팀장(PM)</strong></p>
                 <p>
                     <span class="badge">React</span>
@@ -144,7 +142,7 @@
             </article>
 
             <article class="info-card" style="margin-bottom:18px;">
-                <h3>🌿 휴쉼 <small>(Project 2)</small></h3>
+                <h3>휴쉼 <small>(Project 2)</small></h3>
                 <p>고립·은둔 청년의 감정 공유 기반 커뮤니티 · <strong>FrontEnd</strong></p>
                 <p>
                     <span class="badge">React</span>
@@ -162,7 +160,7 @@
             </article>
 
             <article class="info-card">
-                <h3>🏛️ 상공회의소 커뮤니티 <small>(Project 3)</small></h3>
+                <h3>상공회의소 커뮤니티 <small>(Project 3)</small></h3>
                 <p>부감독 정보 공유 커뮤니티 · <strong>FrontEnd &amp; BackEnd</strong></p>
                 <p>
                     <span class="badge">Next.js</span>
@@ -181,7 +179,7 @@
 
         <!-- 탭 4: 스킬 -->
         <section class="tab-panel" id="skills" role="tabpanel">
-            <h2>📊 나의 기술 스택</h2>
+            <h2>나의 기술 스택</h2>
             <div class="skill">
                 <div class="skill-label"><span>JavaScript / TypeScript</span><span>90%</span></div>
                 <div class="progress"><div class="progress-bar" data-value="90"></div></div>
@@ -232,12 +230,12 @@
         var list = document.getElementById("todoList");
         function addTodo() {
             var v = input.value.trim();
-            if (!v) { showToast("목표를 입력해 주세요 ✏️"); return; }
+            if (!v) { showToast("목표를 입력해 주세요 "); return; }
             var li = document.createElement("li");
             li.textContent = v;
             list.appendChild(li);
             input.value = "";
-            showToast("목표가 추가되었어요! 🎯");
+            showToast("목표가 추가되었어요! ");
         }
         addBtn.addEventListener("click", addTodo);
         input.addEventListener("keydown", function (e) {

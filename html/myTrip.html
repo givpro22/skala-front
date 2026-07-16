@@ -22,13 +22,13 @@
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="테마 전환">🌙</button>
     </header>
 
-    <div class="container">
-        <h1>🌏 나의 여행 앨범 🎵</h1>
+    <div class="container" data-file="myTrip.html">
+        <h1>나의 여행 앨범</h1>
         <p>사진을 클릭하면 크게 볼 수 있어요. 배경 음악과 브이로그 영상도 함께 즐겨보세요.</p>
 
         <!-- 배경 음악 -->
         <section class="media-box" data-reveal>
-            <h3>🎧 여행의 배경 음악</h3>
+            <h3>여행의 배경 음악</h3>
             <audio controls>
                 <source src="media/travel-music.mp3" type="audio/mpeg">
                 <source src="media/travel-music.ogg" type="audio/ogg">
@@ -37,7 +37,7 @@
         </section>
 
         <!-- 사진 갤러리 (Grid + Lightbox) -->
-        <h2>🖼️ 여행 사진 갤러리</h2>
+        <h2>여행 사진 갤러리</h2>
         <div class="gallery">
             <figure class="trip-card" data-reveal>
                 <img src="media/trip1.jpg" alt="리장 호도협" data-caption="리장 호도협 (2025년)">
@@ -55,13 +55,13 @@
 
         <!-- 브이로그 영상 -->
         <section class="media-box" data-reveal>
-            <h2>📺 나의 여행 브이로그</h2>
+            <h2>나의 여행 브이로그</h2>
             <video controls>
                 <source src="media/trip-vlog.mp4" type="video/mp4">
                 <source src="media/trip-vlog.ogg" type="video/ogg">
                 브라우저가 video 요소를 지원하지 않습니다.
             </video>
-            <p>리장의 아름다운 풍경과 음악 🎵</p>
+            <p>리장의 아름다운 풍경과 음악 </p>
         </section>
     </div>
 
