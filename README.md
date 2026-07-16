@@ -28,6 +28,25 @@
 
 ---
 
+## 화면 미리보기
+
+메인 페이지는 **다크 / 라이트 테마**를 모두 지원하며, 우측 상단 버튼으로 전환됩니다.
+
+| 다크 테마 | 라이트 테마 |
+|:---:|:---:|
+| ![메인 화면 - 다크 테마](docs/screenshots/home-dark.png) | ![메인 화면 - 라이트 테마](docs/screenshots/home-light.png) |
+
+<p align="center">
+  <img src="docs/screenshots/tutorial.png" width="49%" alt="첫 방문 튜토리얼 모달" />
+  <img src="docs/screenshots/command-palette.png" width="49%" alt="명령 팔레트 (⌘K)" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/achievements.png" width="49%" alt="업적 시스템 패널" />
+  <img src="docs/screenshots/ambient-settings.png" width="49%" alt="배경 코드 글리프 밀도 설정" />
+</p>
+
+---
+
 ## 기술 스택
 
 | 구분 | 사용 기술 |
@@ -103,6 +122,10 @@ skala-front/
 
 - `↑` / `↓` 명령 히스토리, `clear` 초기화, 없는 명령 처리
 
+| `help` — 명령어 목록 | `coffee` · `cowsay` · `joke` 이스터에그 |
+|:---:|:---:|
+| ![터미널 help 명령](docs/screenshots/terminal-help.png) | ![터미널 이스터에그](docs/screenshots/terminal-fun.png) |
+
 ---
 
 ## 업적 시스템 & 기타 인터랙션
@@ -134,11 +157,19 @@ skala-front/
 | `signUp.html` | `<form><fieldset><legend><label>`, 다양한 `<input>` · `<select>` · `<textarea>` |
 | `signUpResult.html` | `method="get"` 폼 전송 · 앵커 링크 |
 
+> **소개 페이지** — 프로필 카드 · 통계 · **실제 GitHub 커밋 히트맵** · 탭 전환
+>
+> ![소개 페이지](docs/screenshots/profile.png)
+
 ---
 
 ## JavaScript 실습 과제
 
 강의 실습 과제를 메인 페이지(`index.html`) 우측 **실시간 날씨 / 미니 앱** 영역에서 직접 실행할 수 있습니다.
+
+| 실시간 날씨 위젯 | 미니 앱 카드 런처 | 커스텀 테마 모달 |
+|:---:|:---:|:---:|
+| ![실시간 날씨 위젯](docs/screenshots/weather-widget.png) | ![미니 앱 런처](docs/screenshots/mini-apps.png) | ![커스텀 입력 모달](docs/screenshots/custom-dialog.png) |
 
 | 과제 | 파일 | 핵심 개념 |
 |------|------|-----------|
