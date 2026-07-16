@@ -18,7 +18,9 @@
         { id: "theme", icon: "🌗", title: "빛과 어둠", desc: "테마를 전환했다", how: "우측 상단 🌙 버튼으로 다크/라이트를 전환하세요" },
         { id: "gamer", icon: "✊", title: "승부사", desc: "가위바위보 게임을 했다", how: "터미널에 rps 가위 (또는 바위/보) 를 입력하세요" },
         { id: "helper", icon: "❔", title: "길잡이", desc: "도움말을 열어봤다", how: "우측 하단 보라색 ? 버튼을 누르세요" },
-        { id: "ambient", icon: "✨", title: "커스터마이저", desc: "배경 밀도를 조절했다", how: "명령 팔레트에서 '배경 캐릭터 설정'을 열어 밀도를 바꾸세요" }
+        { id: "ambient", icon: "✨", title: "커스터마이저", desc: "배경 밀도를 조절했다", how: "명령 팔레트에서 '배경 캐릭터 설정'을 열어 밀도를 바꾸세요" },
+        { id: "weather", icon: "🌦️", title: "기상캐스터", desc: "실시간 날씨를 조회했다", how: "메인 우측 '실시간 날씨'에서 도시를 바꾸거나 터미널에 weather 를 입력하세요" },
+        { id: "player", icon: "🎮", title: "미니앱 플레이어", desc: "미니 앱을 실행했다", how: "Up-Down 게임·성적 계산기·내 가방 보기 버튼을 눌러보세요" }
     ];
 
     var KEY = "skala-ach";

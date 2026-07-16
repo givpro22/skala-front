@@ -55,7 +55,13 @@ skala-front/
 │   ├── achievements.js     # 업적 시스템 (해금 · 폭죽 · 패널)
 │   ├── ambient.js          # 배경 코드 글리프 (상호작용 · 밀도 설정)
 │   ├── signup.js           # 회원가입 폼 실시간 검증
-│   └── result.js           # 제출값 요약 · 컨페티
+│   ├── result.js           # 제출값 요약 · 컨페티
+│   ├── ui-dialog.js        # 테마 커스텀 모달 (skPrompt/skAlert — 기본 prompt/alert 대체)
+│   ├── weatherAPI.js       # [과제] 실시간 날씨 · 비동기 fetch (ES6 모듈, export)
+│   ├── realtimeInfo.js     # [과제] 실시간 날씨 · DOM/이벤트 (모듈 import)
+│   ├── upDown.js           # [과제] Up-Down 숫자 맞추기 게임
+│   ├── grade.js            # [과제] 성적 계산기 (배열 · 반복 · 평균)
+│   └── bag.js              # [과제] 내 가방 보기 (객체 배열 · 반복)
 └── html/
     ├── index.html          # 메인 포털 (인터랙티브 터미널)
     ├── myProfile.html      # 소개 (통계 · 활동 그래프 · 탭)
@@ -88,6 +94,8 @@ skala-front/
 | `about` `skills` `projects` | 자기소개 · 기술 스택 · 프로젝트 |
 | `awards` `certs` `contact` | 수상 · 자격증 · 연락처 |
 | `ls` · `goto <page>` | 페이지 목록 · 이동 |
+| `weather <도시>` | 실시간 날씨 조회 (Open-Meteo API) |
+| `updown` `grade` `bag` | 미니 앱 실행 (숫자 게임 · 성적 계산기 · 내 가방) |
 | `neofetch` | 개발자 정보 ASCII 아트 |
 | `cowsay <말>` · `rps <가위\|바위\|보>` | ASCII 소 · 가위바위보 게임 |
 | `joke` `coffee` `sudo` | 유머 · 커피 · xkcd 개그 |
@@ -125,6 +133,27 @@ skala-front/
 | `myTrip.html` | `<figure><figcaption>` `<img>` `<audio>` `<video>` `<source>` |
 | `signUp.html` | `<form><fieldset><legend><label>`, 다양한 `<input>` · `<select>` · `<textarea>` |
 | `signUpResult.html` | `method="get"` 폼 전송 · 앵커 링크 |
+
+---
+
+## JavaScript 실습 과제
+
+강의 실습 과제를 메인 페이지(`index.html`) 우측 **실시간 날씨 / 미니 앱** 영역에서 직접 실행할 수 있습니다.
+
+| 과제 | 파일 | 핵심 개념 |
+|------|------|-----------|
+| 실시간 날씨 — 모듈 분리 | `js/weatherAPI.js` | ES6 `export` · 관심사 분리 |
+| 실시간 날씨 — 비동기 호출 | `js/weatherAPI.js` | `async/await` · `fetch` (Open-Meteo API) |
+| 실시간 날씨 — DOM · 이벤트 | `js/realtimeInfo.js` | `import` · `change` 이벤트 · `innerHTML` 갱신 |
+| Up-Down 숫자 맞추기 게임 | `js/upDown.js` | `Math.random` · `while` · `prompt`/`alert` |
+| 성적 계산기 | `js/grade.js` | 배열 · `for` 반복 · 평균 · 합격 판정 |
+| 내 가방 보기 | `js/bag.js` | 객체 배열 · `for` 반복 · `alert` 출력 |
+
+- 날씨 위젯은 도시 `<select>` 를 바꾸면 `change` 이벤트로 API 를 비동기 호출해 **현재/체감온도 · 습도 · 풍속 · 최고·최저 · 시간별 미니 예보(sparkline)** 를 실시간 표시합니다. 날씨 상태(맑음·비·눈·뇌우 등)에 따라 카드 배경 톤이 바뀝니다.
+- 모듈 스크립트는 `<script type="module">` 로 로드되어 `import`/`export` 가 동작합니다 → `file://` 보다 **Live Server**에서 안정적입니다.
+- 미니 앱은 **카드형 런처**(우측 aside)에서 실행하거나, 인터랙티브 터미널에 `weather <도시>` · `updown` · `grade` · `bag` 을 입력해도 실행됩니다. (게임/계산기는 전역 함수 `startUpDown` · `startGrade` · `showMyBag` 를 재사용)
+- 입력/출력은 브라우저 기본 `prompt`/`alert`(스타일 불가) 대신 **사이트 테마에 맞춘 커스텀 모달**(`ui-dialog.js` → `skPrompt`/`skAlert`)을 사용합니다. 과제 로직(`Math.random`·`while`/`for`·배열·조건문)은 그대로이고, 모듈이 없으면 기본 `prompt`/`alert` 로 자동 대체됩니다.
+- 실시간 날씨 조회 / 미니 앱 실행 시 **업적**(기상캐스터 · 미니앱 플레이어)이 해금됩니다.
 
 ---
 
@@ -172,3 +201,11 @@ skala-front/
 - [x] 인터랙티브 터미널 · 명령 팔레트
 - [x] 업적 시스템 · 튜토리얼 · 이스터에그
 - [x] GitHub 활동 그래프 (Fetch API)
+
+### JavaScript 실습 과제
+- [x] 실시간 날씨 — 모듈 분리 (`weatherAPI.js`)
+- [x] 실시간 날씨 — 비동기 호출 (`async/await` · `fetch`)
+- [x] 실시간 날씨 — DOM 조작 · 이벤트 처리 (`realtimeInfo.js`)
+- [x] Up-Down 숫자 맞추기 게임 (`upDown.js`)
+- [x] 성적 계산기 (`grade.js`)
+- [x] 내 가방 보기 (`bag.js`)

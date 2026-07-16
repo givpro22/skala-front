@@ -457,9 +457,273 @@ aside {
     border: 1px solid var(--border);
     border-left: 3px solid var(--brand);
     border-radius: var(--radius-sm);
-    padding: 14px 20px;
+    padding: 18px 22px;
     margin: 20px 0;
 }
+/* 두 번째 이후 섹션 헤딩은 구분선으로 분리 (톤·간격 정리) */
+aside h2:not(:first-of-type) {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+}
+
+.aside-sub {
+    color: var(--text-soft);
+    font-size: 0.85rem;
+    margin: 4px 0 12px;
+}
+
+/* ---------- 실시간 날씨 위젯 (과제) ---------- */
+.weather-widget { margin-bottom: 8px; }
+
+.weather-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-soft);
+    margin-bottom: 6px;
+}
+
+.weather-select {
+    width: 100%;
+    max-width: 320px;
+    padding: 8px 12px;
+    font: inherit;
+    font-size: 0.9rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+.weather-select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(56, 139, 253, 0.25);
+}
+
+.weather-box {
+    margin-top: 12px;
+    min-height: 84px;
+    display: flex;
+    align-items: center;
+}
+.weather-hint, .weather-loading { color: var(--text-soft); font-size: 0.88rem; }
+.weather-loading { animation: pulse 1.1s ease-in-out infinite; }
+.weather-loading::before { content: "⏳ "; }
+.weather-err { color: #f85149; font-size: 0.88rem; }
+@keyframes pulse { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+.weather-card {
+    width: 100%;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    animation: weatherIn 0.4s ease both;
+}
+@keyframes weatherIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* 날씨별 상단 배경 톤 (은은하게) */
+.weather-card[data-sky="clear"] { background: linear-gradient(160deg, rgba(56,139,253,.12), transparent 60%), var(--surface); border-left-color: #58a6ff; }
+.weather-card[data-sky="cloud"] { background: linear-gradient(160deg, rgba(139,148,158,.14), transparent 60%), var(--surface); border-left-color: #8b949e; }
+.weather-card[data-sky="rain"]  { background: linear-gradient(160deg, rgba(88,166,255,.16), transparent 60%), var(--surface); border-left-color: #388bfd; }
+.weather-card[data-sky="snow"]  { background: linear-gradient(160deg, rgba(210,232,255,.16), transparent 60%), var(--surface); border-left-color: #a5d6ff; }
+.weather-card[data-sky="fog"]   { background: linear-gradient(160deg, rgba(139,148,158,.12), transparent 60%), var(--surface); border-left-color: #a0a8b0; }
+.weather-card[data-sky="storm"] { background: linear-gradient(160deg, rgba(163,113,247,.16), transparent 60%), var(--surface); border-left-color: #a371f7; }
+
+.weather-top { display: flex; align-items: center; gap: 16px; }
+.weather-icon { font-size: 2.8rem; line-height: 1; }
+.weather-city { font-size: 0.85rem; color: var(--text-soft); margin: 0; }
+.weather-temp { font-size: 2rem; font-weight: 700; color: var(--brand); margin: 2px 0; line-height: 1.1; }
+.weather-meta { font-size: 0.82rem; color: var(--text-soft); margin: 0; }
+
+.weather-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--border);
+}
+.weather-stats .ws {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: var(--text);
+}
+.weather-stats .ws b { color: var(--text-soft); font-weight: 500; }
+
+/* 시간별 미니 예보 (sparkline) */
+.weather-hourly {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 4px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+}
+.wh-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex: 1; }
+.wh-t { font-size: 0.66rem; color: var(--text-soft); margin-bottom: 4px; }
+.wh-bar {
+    width: 9px;
+    border-radius: 4px 4px 0 0;
+    background: linear-gradient(180deg, var(--brand), var(--accent));
+    transition: height 0.4s ease;
+}
+.wh-h { font-size: 0.62rem; color: var(--text-soft); margin-top: 5px; }
+
+/* ---------- 미니 앱 카드 런처 (과제) ---------- */
+.app-launcher {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+.app-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    padding: 14px;
+    font: inherit;
+    text-align: left;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.app-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.2s ease;
+}
+.app-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+.app-card:hover::before { transform: scaleY(1); }
+.app-ico { font-size: 1.7rem; line-height: 1; }
+.app-name { font-size: 0.86rem; font-weight: 600; margin-top: 4px; }
+.app-desc { font-size: 0.72rem; color: var(--text-soft); }
+.app-run {
+    font-size: 0.68rem;
+    color: var(--accent);
+    margin-top: 6px;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.app-card:hover .app-run { opacity: 1; transform: none; }
+
+.aside-sub code {
+    font-size: 0.82em;
+    padding: 1px 5px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--brand);
+}
+
+@media (max-width: 560px) {
+    .app-launcher { grid-template-columns: 1fr; }
+    .app-card { flex-direction: row; align-items: center; gap: 10px; }
+    .app-card .app-run { display: none; }
+}
+
+/* ---------- 커스텀 입력/알림 모달 (테마 prompt/alert) ---------- */
+.sk-dialog-ov {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(1, 4, 9, 0.6);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+.sk-dialog-ov.show { opacity: 1; }
+
+.sk-dialog {
+    width: 100%;
+    max-width: 440px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    transform: translateY(10px) scale(0.97);
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sk-dialog-ov.show .sk-dialog { transform: none; }
+
+.sk-dialog-bar {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 14px;
+    background: var(--surface-alt);
+    border-bottom: 1px solid var(--border);
+}
+.sk-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+.sk-dot.r { background: #ff5f56; }
+.sk-dot.y { background: #ffbd2e; }
+.sk-dot.g { background: #27c93f; }
+.sk-dialog-title {
+    margin-left: 8px;
+    font-size: 0.82rem;
+    color: var(--text-soft);
+}
+
+.sk-dialog-body { padding: 20px 22px 8px; }
+.sk-dialog-msg {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.sk-dialog-input {
+    width: 100%;
+    margin-top: 16px;
+    padding: 11px 14px;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+}
+.sk-dialog-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(56, 139, 253, 0.25);
+}
+
+.sk-dialog-foot {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 22px 20px;
+}
+.sk-dialog-foot .btn { margin: 0; }
+/* 다이얼로그 확인 버튼에는 터미널 '$' 프리픽스를 숨김 */
+.sk-dialog-foot .btn-primary::before { content: none; }
 
 footer {
     text-align: center;

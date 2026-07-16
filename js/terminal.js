@@ -50,6 +50,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 ["contact", "연락처"],
                 ["ls", "페이지 목록"],
                 ["goto <page>", "페이지 이동 (예: goto trip)"],
+                ["weather [도시]", "실시간 날씨 조회 (예: weather 서울)"],
+                ["updown", "Up-Down 숫자 맞추기 게임"],
+                ["grade", "성적 계산기"],
+                ["bag", "내 가방 보기"],
                 ["theme", "다크/라이트 전환"],
                 ["matrix", "매트릭스 이스터에그"],
                 ["neofetch", "개발자 정보 아트"],
@@ -111,6 +115,58 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!target) { print("페이지를 찾을 수 없어요: " + esc(arg) + " (ls 로 목록 확인)", "err"); return; }
             print("이동 중... → " + target, "muted");
             setTimeout(function () { location.href = target; }, 400);
+        },
+        weather: function (arg) {
+            var api = window.skalaWeather;
+            if (!api) { print("날씨 모듈을 불러오는 중이에요. 잠시 후 다시 시도해주세요.", "muted"); return; }
+            var name = (arg || "").trim();
+            var cities = api.cities || {};
+            var target = null, cityName = null;
+            if (!name) {
+                cityName = Object.keys(cities)[0];
+                target = cities[cityName];
+            } else {
+                // 부분 일치 검색 (예: '서울' → '서울특별시')
+                var keys = Object.keys(cities);
+                for (var i = 0; i < keys.length; i++) {
+                    if (keys[i].indexOf(name) >= 0) { cityName = keys[i]; target = cities[keys[i]]; break; }
+                }
+            }
+            if (!target) {
+                print("도시를 찾을 수 없어요: " + esc(name), "err");
+                print("사용 가능: " + Object.keys(cities).join(", "), "muted");
+                return;
+            }
+            print(cityName + " 날씨를 불러오는 중...", "muted");
+            api.fetch(target.lat, target.lon).then(function (w) {
+                var d = api.describe(w.weatherCode);
+                print(d[1] + " <span class='t-cmd'>" + esc(cityName) + "</span><span class='t-desc'>" +
+                      d[0] + " · " + Math.round(w.temperature) + w.tempUnit +
+                      " (체감 " + Math.round(w.apparent) + w.tempUnit + ")</span>", "accent");
+                print("습도 " + w.humidity + w.humidityUnit + " · 바람 " + Math.round(w.wind) + " " + w.windUnit +
+                      " · 최고 " + Math.round(w.tempMax) + w.tempUnit + " / 최저 " + Math.round(w.tempMin) + w.tempUnit);
+                if (window.unlock) window.unlock("weather");
+            }).catch(function (e) {
+                print(esc(e.message), "err");
+            });
+        },
+        updown: function () {
+            if (typeof window.startUpDown !== "function") { print("게임을 불러올 수 없어요.", "err"); return; }
+            print("Up-Down 게임을 시작합니다... (팝업 창을 확인하세요)", "muted");
+            if (window.unlock) window.unlock("player");
+            setTimeout(window.startUpDown, 60);
+        },
+        grade: function () {
+            if (typeof window.startGrade !== "function") { print("성적 계산기를 불러올 수 없어요.", "err"); return; }
+            print("성적 계산기를 실행합니다... (팝업 창을 확인하세요)", "muted");
+            if (window.unlock) window.unlock("player");
+            setTimeout(window.startGrade, 60);
+        },
+        bag: function () {
+            if (typeof window.showMyBag !== "function") { print("가방을 불러올 수 없어요.", "err"); return; }
+            print("가방을 열어봅니다... (팝업 창을 확인하세요)", "muted");
+            if (window.unlock) window.unlock("player");
+            setTimeout(window.showMyBag, 60);
         },
         theme: function () { if (typeof toggleTheme === "function") toggleTheme(); if (window.unlock) window.unlock("theme"); print("테마를 전환했어요."); },
         matrix: function () { if (typeof window.runMatrix === "function") window.runMatrix(); print("실행 중... (화면 클릭 시 종료)", "muted"); },
