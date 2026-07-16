@@ -135,6 +135,7 @@ function injectStatusBar() {
             '<span class="sb accent">⎇ feature/ui-upgrade</span>' +
             '<span class="sb">✓ 0  ✕ 0</span>' +
             '<span class="sb kbd" data-cmdk title="명령 팔레트 열기">⌘K 명령</span>' +
+            '<span class="sb kbd help" data-hint title="단축키 &amp; 숨은 기능 보기">? 도움말</span>' +
         '</div>' +
         '<div class="right">' +
             '<span class="sb">UTF-8</span>' +
@@ -159,6 +160,11 @@ function injectStatusBar() {
 
     var kbd = bar.querySelector("[data-cmdk]");
     if (kbd) kbd.addEventListener("click", openCmdk);
+
+    var hintBtn = bar.querySelector("[data-hint]");
+    if (hintBtn) hintBtn.addEventListener("click", function () {
+        if (typeof window.showFeatureHint === "function") window.showFeatureHint();
+    });
 }
 
 /* ---------- 커맨드 팔레트 (⌘K / Ctrl+K) ---------- */
@@ -170,6 +176,7 @@ var CMDK_ITEMS = [
     { label: "여행 앨범", hint: "myTrip.html", icon: "🌏", href: "myTrip.html" },
     { label: "회원가입", hint: "signUp.html", icon: "📝", href: "signUp.html" },
     { label: "테마 전환 (다크 / 라이트)", hint: "theme", icon: "🌓", action: "theme" },
+    { label: "매트릭스 효과 실행", hint: "matrix", icon: "🟦", action: "matrix" },
     { label: "맨 위로 스크롤", hint: "scroll top", icon: "⬆️", action: "top" },
     { label: "GitHub 프로필 열기", hint: "github.com/givpro22", icon: "🔗", href: "https://github.com/givpro22", external: true }
 ];
@@ -260,6 +267,9 @@ function runCmdk(item) {
     if (!item) return;
     closeCmdk();
     if (item.action === "theme") { toggleTheme(); showToast("🌓 테마를 전환했어요"); }
+    else if (item.action === "matrix") {
+        if (typeof window.runMatrix === "function") { window.runMatrix(); showToast("> DEVELOPER MODE"); }
+    }
     else if (item.action === "top") { window.scrollTo({ top: 0, behavior: "smooth" }); }
     else if (item.href && item.external) { window.open(item.href, "_blank", "noopener"); }
     else if (item.href) { location.href = item.href; }

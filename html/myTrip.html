@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ParkYoungSeo의 여행 사진 · 음악 · 영상 앨범">
     <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/effects.js"></script>
     <script src="../js/common.js"></script>
     <title>나의 여행지</title>
 </head>
@@ -30,6 +31,7 @@
         <section class="media-box" data-reveal>
             <h3>여행의 배경 음악</h3>
             <audio controls>
+                <source src="media/travel-music.wav" type="audio/wav">
                 <source src="media/travel-music.mp3" type="audio/mpeg">
                 <source src="media/travel-music.ogg" type="audio/ogg">
                 브라우저가 audio 요소를 지원하지 않습니다.
@@ -40,15 +42,15 @@
         <h2>여행 사진 갤러리</h2>
         <div class="gallery">
             <figure class="trip-card" data-reveal>
-                <img src="media/trip1.jpg" alt="리장 호도협" data-caption="리장 호도협 (2025년)">
+                <img src="media/trip1.svg" alt="리장 호도협" data-caption="리장 호도협 (2025년)">
                 <figcaption>리장 호도협 (2025년)</figcaption>
             </figure>
             <figure class="trip-card" data-reveal>
-                <img src="media/trip2.jpg" alt="세부 탑스힐" data-caption="세부 탑스힐 (2024년)">
+                <img src="media/trip2.svg" alt="세부 탑스힐" data-caption="세부 탑스힐 (2024년)">
                 <figcaption>세부 탑스힐 (2024년)</figcaption>
             </figure>
             <figure class="trip-card" data-reveal>
-                <img src="media/trip3.jpg" alt="홋카이도 대설산" data-caption="홋카이도 대설산 (2025년)">
+                <img src="media/trip3.svg" alt="홋카이도 대설산" data-caption="홋카이도 대설산 (2025년)">
                 <figcaption>홋카이도 대설산 (2025년)</figcaption>
             </figure>
         </div>
@@ -56,12 +58,12 @@
         <!-- 브이로그 영상 -->
         <section class="media-box" data-reveal>
             <h2>나의 여행 브이로그</h2>
-            <video controls>
+            <video controls poster="media/vlog-poster.svg">
                 <source src="media/trip-vlog.mp4" type="video/mp4">
                 <source src="media/trip-vlog.ogg" type="video/ogg">
                 브라우저가 video 요소를 지원하지 않습니다.
             </video>
-            <p>리장의 아름다운 풍경과 음악 </p>
+            <p>리장의 아름다운 풍경과 음악</p>
         </section>
     </div>
 

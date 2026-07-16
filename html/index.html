@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ParkYoungSeo의 개인 포털 - 프로필, 강의 시간표, 여행 앨범을 한 곳에서">
     <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/effects.js"></script>
     <script src="../js/common.js"></script>
     <title>Welcome SKALA</title>
 </head>
@@ -40,11 +41,12 @@
 |  __/ ___ \|  _ &lt;| . \
 |_| /_/   \_\_| \_\_|\_\</pre>
                 <p><span class="prompt">➜</span> <span class="path">~/skala-front</span> cat <span class="flag">about.txt</span></p>
-                <p class="comment"># 박영서(Park Youngseo) · Frontend Developer</p>
+                <p class="comment"># 박영서(Park Youngseo) · Full-stack Developer</p>
                 <p class="comment"># 프로필 · 학습 · 여행 기록을 모아둔 포털 사이트</p>
                 <p><span class="prompt">➜</span> <span class="path">~/skala-front</span> date</p>
                 <p><span class="clock-badge" id="clock">로딩 중...</span></p>
                 <p class="comment"># Tip: <strong style="color:#79c0ff">⌘K</strong> (또는 Ctrl+K) 로 명령 팔레트를 열어보세요</p>
+                <p class="comment"># Tip: <strong style="color:#d2a8ff">↑ ↑ ↓ ↓</strong> 입력 → 매트릭스 이스터에그 실행</p>
             </div>
         </section>
 
@@ -88,7 +90,7 @@
             <section data-reveal>
                 <h3>이달의 베스트 컷</h3>
                 <figure class="trip-card" style="max-width:420px;margin:16px auto;">
-                    <img id="slide" src="media/trip1.jpg" alt="이달의 여행 사진">
+                    <img id="slide" src="media/trip1.svg" alt="이달의 여행 사진">
                     <figcaption id="slideCaption">중국 리장 호도협 (2025년 촬영)</figcaption>
                     <div class="btn-row" style="justify-content:center;">
                         <button class="btn btn-ghost" id="prevBtn" aria-label="이전 사진">‹ 이전</button>
@@ -121,7 +123,7 @@
     <script>
         // 타이핑 효과
         (function typing() {
-            var words = ["박영서", "Frontend Developer", "Park Youngseo"];
+            var words = ["박영서", "Full-stack Developer", "Park Youngseo"];
             var el = document.getElementById("typed");
             if (!el) return;
             var wi = 0, ci = 0, deleting = false;
@@ -149,9 +151,9 @@
         // 이미지 슬라이더
         (function slider() {
             var slides = [
-                { src: "media/trip1.jpg", cap: "중국 리장 호도협 (2025년 촬영)" },
-                { src: "media/trip2.jpg", cap: "필리핀 세부 탑스힐 (2024년 촬영)" },
-                { src: "media/trip3.jpg", cap: "일본 홋카이도 대설산 (2025년 촬영)" }
+                { src: "media/trip1.svg", cap: "중국 리장 호도협 (2025년 촬영)" },
+                { src: "media/trip2.svg", cap: "필리핀 세부 탑스힐 (2024년 촬영)" },
+                { src: "media/trip3.svg", cap: "일본 홋카이도 대설산 (2025년 촬영)" }
             ];
             var idx = 0;
             var img = document.getElementById("slide");
