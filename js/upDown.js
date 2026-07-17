@@ -43,6 +43,7 @@ async function startUpDown() {
         } else {
             await say("🎉 축하합니다!\n" + tries + "번 만에 정답 " + computerNum + " 을(를) 맞추셨습니다.",
                       { title: TITLE });
+            if (window.unlock) window.unlock("winner");
             break;
         }
     }

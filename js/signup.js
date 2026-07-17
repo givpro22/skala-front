@@ -250,6 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }));
                 } catch (err) { /* 시크릿 모드 등 — 요약이 없어도 진행 */ }
 
+                if (window.unlock) window.unlock("member");   // 정식 회원 업적
                 location.href = "signUpResult.html";
             });
         });

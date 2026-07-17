@@ -348,3 +348,28 @@ function closeCmdk() {
     cmdkState.open = false;
     overlay.classList.remove("open");
 }
+
+/* ---------- 콘솔 이스터에그 (hacker 업적) ----------
+   개발자 도구 콘솔에서 skala() 를 실행하면 숨은 업적이 해금된다.
+   개발자스러운 사이트답게 콘솔을 열어본 사람에게 주는 보상. */
+(function consoleEgg() {
+    var shown = false;
+    window.skala = function () {
+        if (window.unlock) window.unlock("hacker");
+        if (!shown) {
+            shown = true;
+            console.log("%cSKALA·FRONT", "font-size:20px;font-weight:700;color:#58a6ff");
+            console.log("%c콘솔까지 열어보다니, 진짜 개발자시군요. 🕶️ '해커' 업적을 드립니다.",
+                        "color:#3fb950");
+        }
+        return "🏆 unlocked: 해커";
+    };
+    // 첫 방문자를 위한 힌트 (한 번만)
+    try {
+        if (!localStorage.getItem("skala-console-hinted")) {
+            localStorage.setItem("skala-console-hinted", "1");
+            console.log("%c개발자 콘솔을 발견하셨네요. %cskala()%c 를 입력해보세요.",
+                        "color:#8b949e", "color:#58a6ff;font-weight:700", "color:#8b949e");
+        }
+    } catch (e) { /* noop */ }
+})();

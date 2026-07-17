@@ -263,6 +263,8 @@
 
     var RANK_HTML =
         '<p class="dock-sub">업적을 많이 해금한 순서입니다. 공개되는 건 닉네임과 개수뿐이에요.</p>' +
+        '<p class="lb-notice">🪪 <strong>회원가입</strong>을 해야 랭킹에 기록됩니다. ' +
+            '방명록·낙서판만 쓴 익명 방문자는 순위에 오르지 않아요.</p>' +
         '<ol class="lb-list" id="lbList"><li class="lb-empty">랭킹을 불러오는 중…</li></ol>' +
         '<p class="lb-me" id="lbMe"></p>' +
         '<button type="button" class="btn btn-ghost lb-refresh" id="lbRefresh">↻ 새로고침</button>';
