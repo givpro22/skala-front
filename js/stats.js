@@ -214,6 +214,10 @@
             rank.textContent = row.rank + "위";
             li.appendChild(rank);
 
+            // 칭호 (서버가 보유 검증한 것만) — 닉네임 앞에
+            var titleEl = renderTitle(row.title_id);
+            if (titleEl) { titleEl.classList.add("lb-title"); li.appendChild(titleEl); }
+
             // 닉네임은 사용자 입력 — textContent 로 넣는다
             var nick = document.createElement("span");
             nick.className = "lb-nick";

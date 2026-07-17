@@ -1207,6 +1207,41 @@ input.invalid { border-color: var(--danger); }
 }
 
 
+/* ---------- 칭호 배지 (방명록·랭킹·계정 칩 공용) ---------- */
+
+.title-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--brand);
+    margin-right: 4px;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+/* 히든 업적 칭호 — 무지개 그라디언트가 흐르며 빛난다 */
+.title-badge.hidden {
+    font-weight: 700;
+    background: linear-gradient(90deg, #ff7b72, #f0b429, #3fb950, #58a6ff, #a371f7, #ff7b72);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: title-shine 4s linear infinite;
+    text-shadow: 0 0 8px rgba(163, 113, 247, 0.25);
+}
+@keyframes title-shine {
+    to { background-position: 300% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .title-badge.hidden { animation: none; }
+}
+
+.acct-title { font-size: 0.7rem; }
+.lb-title { font-size: 0.68rem; margin-right: 3px; }
+
+
 /* ---------- 상단바 계정 칩 ---------- */
 
 .acct { position: relative; display: flex; align-items: center; }
@@ -2481,6 +2516,53 @@ kbd {
 .ach-lock { font-size: 0.7rem; color: var(--text-soft); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; margin-left: 4px; }
 .ach-how { font-size: 0.8rem; color: var(--text-soft); margin-top: 2px; }
 .ach-item.on .ach-how { color: var(--accent); }
+.ach-item .ach-t { flex: 1; min-width: 0; }
+
+/* 히든 미해금 — ??? 로 감춤 */
+.ach-item.locked-hidden { border-style: dashed; }
+.ach-hidden { color: var(--text-soft); letter-spacing: 1px; }
+.ach-hint { font-style: italic; }
+.ach-hidden-tag {
+    font-size: 0.62rem;
+    padding: 1px 5px;
+    border-radius: 4px;
+    margin-left: 4px;
+    background: var(--border);
+    color: var(--text-soft);
+    vertical-align: middle;
+}
+/* 해금된 히든 업적 태그는 빛난다 */
+.ach-hidden-tag.on {
+    background: linear-gradient(90deg, #a371f7, #58a6ff);
+    color: #fff;
+    font-weight: 700;
+}
+
+.ach-title-help {
+    font-size: 0.78rem;
+    color: var(--text-soft);
+    padding: 8px 14px 2px;
+    line-height: 1.5;
+}
+.ach-title-help b { color: var(--brand); }
+
+/* 칭호 달기 버튼 */
+.ach-pick {
+    flex-shrink: 0;
+    align-self: center;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: none;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+.ach-pick:hover { border-color: var(--brand); color: var(--brand); }
+.ach-pick.on { background: var(--brand); border-color: var(--brand); color: #fff; }
+.ach-pick.hidden-title:not(.on) { border-color: #a371f7; color: #a371f7; }
 
 /* ============================================================
    👋 첫 방문 튜토리얼 모달

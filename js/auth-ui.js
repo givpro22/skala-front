@@ -65,6 +65,13 @@
         dot.className = "acct-dot";
         chip.appendChild(dot);
 
+        // 내 칭호 — 로컬 선택값을 우선 쓴다 (방금 바꾼 게 바로 보이도록).
+        // 내 화면이므로 서버 검증 없이 표시해도 무방하다.
+        var titleId = (typeof window.getTitle === "function" && window.getTitle()) ||
+                      (profile && profile.title) || "";
+        var titleEl = renderTitle(titleId);
+        if (titleEl) { titleEl.classList.add("acct-title"); chip.appendChild(titleEl); }
+
         // 닉네임은 사용자 입력 → textContent 로 넣는다
         var name = document.createElement("span");
         name.className = "acct-name";
@@ -145,6 +152,9 @@
 
         // 로그인/로그아웃/익명 로그인 시 상단바를 다시 그린다
         window.SkalaAuth.onAuthChange(function () { refresh(); });
+
+        // 칭호를 바꾸면 계정 칩을 다시 그린다
+        window.addEventListener("skala-title-changed", function () { refresh(); });
 
         // 메뉴 바깥 클릭 · Esc 로 닫기
         document.addEventListener("click", function () { if (menuOpen) closeMenu(); });

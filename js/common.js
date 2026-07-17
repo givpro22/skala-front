@@ -72,6 +72,20 @@ function showFormStatus(el, text, kind) {
     el.className = "form-status " + (kind || "");
 }
 
+/* ---------- 칭호 배지 (방명록·랭킹·계정 칩 공용) ----------
+   achievement id → <span> 요소, 없으면 null.
+   히든 업적 칭호는 특수 효과 클래스를 붙인다. 텍스트는 우리 데이터라 안전하다. */
+function renderTitle(id) {
+    if (!id || typeof window.getAchievementMeta !== "function") return null;
+    var m = window.getAchievementMeta(id);
+    if (!m) return null;
+    var el = document.createElement("span");
+    el.className = "title-badge" + (m.hidden ? " hidden" : "");
+    el.textContent = "〈" + m.title + "〉";
+    if (m.hidden) el.title = "히든 업적 칭호";
+    return el;
+}
+
 // ---------- 실시간 시계 ----------
 function startClock() {
     var el = document.getElementById("clock");

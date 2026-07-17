@@ -72,6 +72,10 @@
 
             var who = document.createElement("span");
             who.className = "gb-nick";
+            // 칭호 — 닉네임 앞에 붙는다. 서버가 보유 검증한 title_id 만 온다.
+            var titleEl = renderTitle(row.title_id);
+            if (titleEl) head.appendChild(titleEl);
+
             who.textContent = row.nickname;
             head.appendChild(who);
 
