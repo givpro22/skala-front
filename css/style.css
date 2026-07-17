@@ -1572,6 +1572,13 @@ body.dock-open .help-fab { right: calc(var(--dock-w) + var(--dock-rail-w) + 22px
     background: var(--brand-light);
     color: var(--brand);
 }
+/* 주인 배지 — 사칭 닉네임과 확실히 구분되도록 다른 색을 쓴다 */
+.gb-badge.owner,
+.lb-tag.owner {
+    background: var(--syn-purple, #a371f7);
+    color: #fff;
+    font-weight: 700;
+}
 .gb-time {
     margin-left: auto;
     font-size: 0.78rem;

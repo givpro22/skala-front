@@ -198,6 +198,15 @@
             nick.textContent = row.nickname;
             li.appendChild(nick);
 
+            // 주인 배지 (닉네임 사칭과 구분하는 위조 불가 표시)
+            if (row.is_owner) {
+                var own = document.createElement("span");
+                own.className = "lb-tag owner";
+                own.textContent = "주인";
+                own.title = "이 사이트의 주인";
+                li.appendChild(own);
+            }
+
             if (row.is_me) {
                 var tag = document.createElement("span");
                 tag.className = "lb-tag";
