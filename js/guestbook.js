@@ -75,6 +75,16 @@
             who.textContent = row.nickname;
             head.appendChild(who);
 
+            // 주인 배지 — 닉네임은 누구나 같은 값을 쓸 수 있으므로(유니크 아님)
+            // 진짜 주인임을 알리는 위조 불가 표시가 필요하다. is_owner 는 DB 가 지킨다.
+            if (row.is_owner) {
+                var owner = document.createElement("span");
+                owner.className = "gb-badge owner";
+                owner.textContent = "주인";
+                owner.title = "이 사이트의 주인이 남긴 글입니다";
+                head.appendChild(owner);
+            }
+
             if (row.is_mine) {
                 var badge = document.createElement("span");
                 badge.className = "gb-badge";

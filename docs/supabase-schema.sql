@@ -39,6 +39,12 @@ create unique index if not exists profiles_handle_lower_key
 -- 이미 만들어진 DB 에도 nickname 이 생기도록 (재실행 안전)
 alter table public.profiles add column if not exists nickname text;
 
+-- 사이트 주인 표시. 방명록·랭킹에 '주인' 배지로 나간다.
+-- 닉네임은 아무나 같은 값을 쓸 수 있으므로(유니크가 아님) 사칭을 완전히 막을 수는 없다.
+-- 대신 '진짜 주인'에게만 위조 불가능한 표시를 붙여 구분한다.
+-- 이 값은 아래 트리거가 지켜서 사용자가 스스로 켤 수 없다 → SQL Editor 에서만 설정.
+alter table public.profiles add column if not exists is_owner boolean not null default false;
+
 alter table public.profiles
     drop constraint if exists profiles_nickname_format;
 alter table public.profiles
@@ -101,6 +107,22 @@ create policy "achievements: 본인 해금"
 -- 업적은 해금 후 취소할 수 없다 → update/delete 정책 없음.
 
 
+-- ---------- 2-1. 주인만 쓸 수 있는 닉네임 ----------
+-- 닉네임은 유니크가 아니다(방명록에 인사 남기려는 사람이 "이미 쓰는 닉네임"으로
+-- 막히면 안 되므로). 대신 주인을 사칭하는 이름만 막는다.
+-- 공백·점·밑줄·하이픈을 지우고 비교해 "박 영 서" 같은 우회를 걸러낸다.
+create or replace function public.nickname_reserved(nick text)
+returns boolean
+language sql
+immutable
+as $$
+    select lower(regexp_replace(coalesce(nick, ''), '[\s._-]', '', 'g')) in (
+        '박영서', 'parkyoungseo', 'youngseo',
+        'admin', 'administrator', '관리자', '운영자', '주인', 'owner'
+    );
+$$;
+
+
 -- ---------- 3. 회원가입 시 프로필 자동 생성 ----------
 -- signUp() 에 넘긴 options.data 가 raw_user_meta_data 로 들어온다.
 --
@@ -123,7 +145,11 @@ begin
     end if;
 
     -- 닉네임은 공개 표시용. 없으면 아이디를 쓴다 (실명은 절대 기본값으로 쓰지 않는다).
-    if meta_nickname is null or char_length(meta_nickname) > 20 then
+    -- 주인 사칭 이름으로 가입하려 하면 '막지 않고' 아이디로 대체한다 —
+    -- 여기서 예외를 던지면 트리거가 롤백되어 계정 생성 자체가 실패한다.
+    if meta_nickname is null
+       or char_length(meta_nickname) > 20
+       or public.nickname_reserved(meta_nickname) then
         meta_nickname := left(meta_handle, 20);
     end if;
 
@@ -172,11 +198,16 @@ create trigger profiles_touch_updated_at
     for each row execute function public.touch_updated_at();
 
 
--- ---------- 4-1. handle 은 가입 시 정해지고 바뀌지 않는다 ----------
+-- ---------- 4-1. 프로필 수정 가드 ----------
 -- "본인 수정" 정책은 어느 컬럼을 바꾸는지까지는 보지 않는다(RLS 는 행 단위).
--- 그대로 두면 익명 사용자가 자기 handle 을 'skala01' 같은 값으로 바꿔
--- 남이 쓸 아이디를 선점할 수 있다. UI 에도 handle 수정 기능은 없으므로 잠근다.
-create or replace function public.profiles_guard_handle()
+-- 그래서 바뀌면 안 되는 컬럼은 트리거로 따로 잠근다.
+--
+--  · handle   — 그대로 두면 익명 사용자가 'skala01' 같은 아이디를 선점할 수 있다.
+--               UI 에도 수정 기능이 없으므로 가입 후 불변.
+--  · is_owner — 스스로 켤 수 있으면 배지의 의미가 없다. 그래서 로그인 세션
+--               (auth.uid() 이 있는 요청)에서는 변경을 막는다.
+--               SQL Editor / service_role 은 auth.uid() 이 null 이라 통과 → 주인만 설정 가능.
+create or replace function public.profiles_guard()
 returns trigger
 language plpgsql
 as $$
@@ -184,14 +215,32 @@ begin
     if new.handle is distinct from old.handle then
         raise exception 'handle_immutable';
     end if;
+
+    if new.is_owner is distinct from old.is_owner and auth.uid() is not null then
+        raise exception 'is_owner_immutable';
+    end if;
+
+    -- 주인 사칭 방지: 주인만 쓸 수 있는 이름은 남이 못 쓴다.
+    -- (가입 시점에는 막지 않고 대체한다 — handle_new_user 참고.
+    --  여기서 막는 것은 '사용자가 직접 닉네임을 바꾸는' 경우다)
+    if new.nickname is distinct from old.nickname
+       and not new.is_owner
+       and public.nickname_reserved(new.nickname) then
+        raise exception 'nickname_reserved';
+    end if;
+
     return new;
 end;
 $$;
 
+-- 예전 이름의 트리거·함수는 정리한다 (재실행 안전)
 drop trigger if exists profiles_guard_handle_trg on public.profiles;
-create trigger profiles_guard_handle_trg
+drop function if exists public.profiles_guard_handle();
+
+drop trigger if exists profiles_guard_trg on public.profiles;
+create trigger profiles_guard_trg
     before update on public.profiles
-    for each row execute function public.profiles_guard_handle();
+    for each row execute function public.profiles_guard();
 
 
 -- ---------- 5. 아이디(handle) 중복 확인용 RPC ----------
@@ -340,6 +389,7 @@ returns table (
     like_count  bigint,
     liked_by_me boolean,
     is_mine     boolean,
+    is_owner    boolean,
     total_count bigint
 )
 language sql
@@ -359,6 +409,8 @@ as $$
         ),
         -- auth.uid() 가 NULL(비로그인)이면 비교 결과가 NULL 이므로 false 로 확정한다
         coalesce(g.user_id = auth.uid(), false),
+        -- 사이트 주인이 쓴 글인지 (닉네임 사칭과 구분하는 위조 불가 표시)
+        coalesce(p.is_owner, false),
         -- limit 이 걸리기 전의 전체 개수 (창 함수는 limit 보다 먼저 계산된다)
         count(*) over ()
     from public.guestbook g
@@ -413,12 +465,16 @@ grant execute on function public.record_visit(text) to anon, authenticated;
 -- ---------- 10. 업적 랭킹 ----------
 -- achievements 는 본인 행만 조회 가능하므로 랭킹도 security definer 로 집계한다.
 -- 닉네임과 개수만 나간다 — 실명은 노출되지 않는다.
+-- ⚠ 반환 컬럼에 is_owner 를 추가했다 → create or replace 로는 안 되고 먼저 지워야 한다
+drop function if exists public.achievement_leaderboard(int);
+
 create or replace function public.achievement_leaderboard(top_n int default 10)
 returns table (
     rank              bigint,
     nickname          text,
     achievement_count bigint,
-    is_me             boolean
+    is_me             boolean,
+    is_owner          boolean
 )
 language sql
 security definer
@@ -429,10 +485,11 @@ as $$
         rank() over (order by count(a.achievement_id) desc),
         coalesce(p.nickname, '익명'),
         count(a.achievement_id),
-        coalesce(p.id = auth.uid(), false)
+        coalesce(p.id = auth.uid(), false),
+        coalesce(p.is_owner, false)
     from public.achievements a
     join public.profiles p on p.id = a.user_id
-    group by p.id, p.nickname
+    group by p.id, p.nickname, p.is_owner
     -- 동점이면 먼저 달성한 사람이 위로
     order by count(a.achievement_id) desc, min(a.unlocked_at) asc
     limit least(greatest(top_n, 1), 50);
@@ -600,7 +657,16 @@ create trigger canvas_rate_limit_upd
     for each row execute function public.canvas_rate_limit();
 
 
--- ---------- 13. Realtime ----------
+-- ---------- 13. 주인 계정 지정 ----------
+-- 아래 한 줄의 주석을 풀고 본인 아이디로 바꿔 실행하면 '주인' 배지가 붙는다.
+-- (사용자 세션에서는 트리거가 막으므로 여기 SQL Editor 에서만 설정된다)
+--
+--   update public.profiles set is_owner = true where handle = '본인아이디';
+--
+-- 확인:  select handle, nickname, is_owner from public.profiles where is_owner;
+
+
+-- ---------- 14. Realtime ----------
 -- 방명록과 좋아요 변경을 구독할 수 있게 publication 에 추가한다.
 -- (RLS 는 그대로 적용되므로 SELECT 정책이 허용하는 행만 전달된다)
 do $$

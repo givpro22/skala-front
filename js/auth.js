@@ -71,6 +71,12 @@
         if (/profiles_nickname_format/i.test(m)) {
             return "닉네임은 1~20자로 입력해 주세요.";
         }
+        if (/nickname_reserved/i.test(m)) {
+            return "그 닉네임은 사이트 주인만 쓸 수 있어요. 다른 닉네임을 골라 주세요.";
+        }
+        if (/handle_immutable|is_owner_immutable/i.test(m)) {
+            return "변경할 수 없는 항목입니다.";
+        }
         if (/row-level security|permission denied|JWT/i.test(m)) {
             return "권한이 없어요. 새로고침 후 다시 시도해 주세요.";
         }
