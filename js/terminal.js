@@ -229,7 +229,10 @@ document.addEventListener("DOMContentLoaded", function () {
             if (you === cpu) res = "비겼어요!";
             else if ((you === "rock" && cpu === "scissors") ||
                      (you === "paper" && cpu === "rock") ||
-                     (you === "scissors" && cpu === "paper")) res = "이겼어요! 🎉";
+                     (you === "scissors" && cpu === "paper")) {
+                res = "이겼어요! 🎉";
+                if (window.unlock) window.unlock("champion");
+            }
             else res = "졌어요... 😢";
             print(res, "accent");
         },

@@ -89,7 +89,8 @@ alter table public.achievements
     add constraint achievements_id_valid check (achievement_id in (
         'explorer', 'rookie', 'master', 'matrix', 'konami', 'palette',
         'theme', 'gamer', 'helper', 'ambient', 'weather', 'player', 'guest',
-        'liker', 'ranker', 'vlog', 'dj', 'gallery', 'nightowl', 'comeback', 'painter'
+        'liker', 'ranker', 'vlog', 'dj', 'gallery', 'nightowl', 'comeback', 'painter',
+        'winner', 'champion', 'member', 'collector', 'completionist', 'hacker'
     ));
 
 alter table public.achievements enable row level security;
@@ -452,9 +453,16 @@ begin
     values (current_date, key)
     on conflict (visit_date, visitor_key) do nothing;
 
+    -- 오늘  = 오늘 날짜의 고유 방문자
+    -- 누적  = 전체 기간의 고유 방문자
+    -- 두 값 모두 '고유 방문자' 기준으로 통일한다.
+    -- (예전엔 오늘을 count(*) 로 세서, 같은 사람이 어제·오늘 오면 누적보다
+    --  커질 수 있었고, 하루치 데이터에선 우연히 두 값이 같아 보이는 버그였다.
+    --  visit_date 별로 행이 하나씩 쌓이므로 count(*) 와 count(distinct) 가 갈린다)
     return query
     select
-        (select count(*) from public.daily_visits where visit_date = current_date),
+        (select count(distinct visitor_key) from public.daily_visits
+          where visit_date = current_date),
         (select count(distinct visitor_key) from public.daily_visits);
 end;
 $$;

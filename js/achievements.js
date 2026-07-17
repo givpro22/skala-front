@@ -29,7 +29,13 @@
         { id: "gallery", icon: "🖼️", title: "감상가", desc: "여행 사진을 크게 봤다", how: "여행 앨범에서 사진을 클릭해 라이트박스로 열어보세요" },
         { id: "nightowl", icon: "🦉", title: "올빼미", desc: "새벽에 방문했다", how: "새벽 0시~5시 사이에 사이트를 방문해보세요" },
         { id: "comeback", icon: "🔁", title: "단골", desc: "다른 날 다시 찾아왔다", how: "오늘 말고 다른 날에 다시 방문해주세요" },
-        { id: "painter", icon: "🎨", title: "화백", desc: "함께 그리기에 픽셀을 칠했다", how: "우측 도크의 🎨 낙서판에서 칸을 칠해보세요" }
+        { id: "painter", icon: "🎨", title: "화백", desc: "함께 그리기에 픽셀을 칠했다", how: "우측 도크의 🎨 낙서판에서 칸을 칠해보세요" },
+        { id: "winner", icon: "🎯", title: "행운아", desc: "Up-Down 게임에서 정답을 맞혔다", how: "터미널에 updown 을 입력해 숫자를 맞혀보세요" },
+        { id: "champion", icon: "✌️", title: "챔피언", desc: "가위바위보에서 이겼다", how: "터미널에 rps 가위/바위/보 를 입력해 이겨보세요" },
+        { id: "member", icon: "🪪", title: "정식 회원", desc: "회원가입을 완료했다", how: "회원가입 페이지에서 계정을 만드세요" },
+        { id: "collector", icon: "🏅", title: "수집가", desc: "업적 절반을 모았다", how: "전체 업적의 절반 이상을 해금하세요" },
+        { id: "completionist", icon: "👑", title: "올클리어", desc: "모든 업적을 해금했다", how: "이 목록의 모든 업적을 달성하세요" },
+        { id: "hacker", icon: "🕶️", title: "해커", desc: "콘솔에서 비밀 명령을 찾았다", how: "브라우저 개발자 콘솔에서 skala() 를 실행해보세요" }
     ];
 
     var KEY = "skala-ach";
@@ -157,20 +163,41 @@
         }, 4200);
     }
 
-    /* ---------- 해금 ---------- */
-    window.unlock = function (id) {
+    /* 진행형 업적(다른 업적을 모아야 열리는 것)의 목표 개수.
+       LIST 길이에서 파생하므로 업적을 추가해도 자동으로 맞춰진다.
+       이 둘은 스스로 계산되므로 how 안내와 달리 직접 해금 훅이 없다. */
+    var MILESTONE = { collector: 0, completionist: 0 };
+    (function milestoneTargets() {
+        var total = LIST.length;
+        MILESTONE.collector = Math.ceil(total / 2);   // 전체의 절반
+        MILESTONE.completionist = total - 1;          // 자신을 뺀 나머지 전부
+    })();
+
+    /* 실제 해금 로직. cascade=false 면 진행형 업적 재검사를 건너뛴다(재귀 방지). */
+    function doUnlock(id, cascade) {
         var m = meta(id);
-        if (!m) return;
+        if (!m) return false;
         var state = load();
-        if (state[id]) return;
+        if (state[id]) return false;
         state[id] = Date.now();
         save(state);
         showUnlockEffect(m);
         updateBadge();
         pushRemote([id]);   // 로그인 상태면 계정에도 기록 (실패해도 로컬은 유지)
-        // 랭킹 위젯 등이 스스로 갱신할 수 있게 알린다
         window.dispatchEvent(new CustomEvent("skala-achievement-unlocked", { detail: { id: id } }));
-    };
+
+        // 진행형 업적 검사 — 방금 해금으로 목표에 도달했는지.
+        // MILESTONE 자신을 해금할 때는 다시 세지 않는다 (재귀 방지).
+        if (cascade && id !== "collector" && id !== "completionist") {
+            var got = countGot();   // 방금 저장분이 반영된 개수
+            if (got >= MILESTONE.collector) doUnlock("collector", false);
+            if (got >= MILESTONE.completionist) doUnlock("completionist", false);
+        }
+        return true;
+    }
+
+    /* ---------- 해금 ---------- */
+    window.unlock = function (id) { doUnlock(id, true); };
 
     window.getAchievements = function () {
         var s = load();

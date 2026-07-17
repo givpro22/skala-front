@@ -1721,6 +1721,16 @@ body.dock-open .help-fab { right: calc(var(--dock-w) + var(--dock-rail-w) + 22px
 .lb-count .ico { width: 14px; height: 14px; }
 
 .lb-empty { color: var(--text-soft); font-size: 0.85rem; padding: 10px 0; }
+.lb-notice {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--text-soft);
+    background: var(--brand-light);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    margin: 0 0 12px;
+}
+.lb-notice strong { color: var(--brand); }
 .lb-me {
     font-size: 0.82rem;
     color: var(--text-soft);
