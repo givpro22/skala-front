@@ -158,7 +158,9 @@
                     meEl.textContent = "내 순위: " + row.rank + "위 (" +
                         row.achievement_count + "개 해금)";
                 } else {
-                    meEl.textContent = "아직 순위가 없어요 — 업적을 해금하면 랭킹에 등장합니다.";
+                    // 순위가 없는 이유가 두 가지다 — 익명이라 제외된 것과,
+                    // 아직 아무것도 해금 못 한 것. 구분해서 알려준다.
+                    showNoRank(meEl);
                 }
             }
         }).catch(function () {
@@ -168,6 +170,26 @@
             li.className = "lb-empty";
             li.textContent = "랭킹을 불러오지 못했습니다.";
             listEl.appendChild(li);
+        });
+    }
+
+    /* 순위가 없을 때의 안내.
+       익명 계정은 랭킹에서 제외되므로 "업적을 더 모으세요" 라고 하면 거짓말이 된다.
+       회원가입하면 참여할 수 있다는 것을 알려준다. */
+    function showNoRank(meEl) {
+        meEl.textContent = "";
+        window.SkalaAuth.getUser().then(function (u) {
+            if (u.user && window.SkalaAuth.isAnonymous(u.user)) {
+                meEl.textContent = "랭킹은 회원만 참여할 수 있어요. ";
+                var a = document.createElement("a");
+                a.href = "signUp.html";
+                a.textContent = "회원가입하기";
+                meEl.appendChild(a);
+                return;
+            }
+            meEl.textContent = "아직 순위가 없어요 — 업적을 해금하면 랭킹에 등장합니다.";
+        }).catch(function () {
+            meEl.textContent = "아직 순위가 없어요 — 업적을 해금하면 랭킹에 등장합니다.";
         });
     }
 

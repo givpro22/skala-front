@@ -465,6 +465,16 @@ grant execute on function public.record_visit(text) to anon, authenticated;
 -- ---------- 10. 업적 랭킹 ----------
 -- achievements 는 본인 행만 조회 가능하므로 랭킹도 security definer 로 집계한다.
 -- 닉네임과 개수만 나간다 — 실명은 노출되지 않는다.
+--
+-- 익명 계정(방명록·낙서판을 쓰려고 자동 발급된 신원)은 랭킹에서 제외한다.
+-- 브라우저를 지우면 사라지는 일회성 신원이라 '순위'로서 의미가 없고,
+-- 한 사람이 익명 계정을 여러 개 만들어 목록을 채울 수도 있다.
+-- → 랭킹은 회원가입한 계정만.
+--
+-- ⚠ 여기 모집단을 바꾸면 my_achievement_rank 도 똑같이 바꿔야 한다.
+--   (예전에 한쪽만 profiles 를 조인해서 목록엔 "3위", 아래엔 "내 순위: 4위" 로
+--    어긋나는 버그가 있었다)
+--
 -- ⚠ 반환 컬럼에 is_owner 를 추가했다 → create or replace 로는 안 되고 먼저 지워야 한다
 drop function if exists public.achievement_leaderboard(int);
 
@@ -489,6 +499,8 @@ as $$
         coalesce(p.is_owner, false)
     from public.achievements a
     join public.profiles p on p.id = a.user_id
+    join auth.users u on u.id = a.user_id
+    where not coalesce(u.is_anonymous, false)   -- 익명 계정 제외 (회원만)
     group by p.id, p.nickname, p.is_owner
     -- 동점이면 먼저 달성한 사람이 위로
     order by count(a.achievement_id) desc, min(a.unlocked_at) asc
@@ -516,7 +528,10 @@ as $$
             rank() over (order by count(a.achievement_id) desc) as r,
             count(a.achievement_id) as c
         from public.achievements a
-        join public.profiles p on p.id = a.user_id   -- 랭킹판과 동일한 모집단
+        -- ↓ 랭킹판(achievement_leaderboard)과 반드시 동일한 모집단이어야 한다
+        join public.profiles p on p.id = a.user_id
+        join auth.users u on u.id = a.user_id
+        where not coalesce(u.is_anonymous, false)
         group by a.user_id
     )
     select r, c from ranked where user_id = auth.uid();
