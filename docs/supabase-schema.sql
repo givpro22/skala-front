@@ -658,11 +658,18 @@ create trigger canvas_rate_limit_upd
 
 
 -- ---------- 13. 주인 계정 지정 ----------
--- 아래 한 줄의 주석을 풀고 본인 아이디로 바꿔 실행하면 '주인' 배지가 붙는다.
+-- 아래 이메일로 가입한 계정에 '주인' 배지를 붙인다.
 -- (사용자 세션에서는 트리거가 막으므로 여기 SQL Editor 에서만 설정된다)
 --
---   update public.profiles set is_owner = true where handle = '본인아이디';
---
+-- handle 이 아니라 email 로 찾는 이유: handle 은 가입 폼의 '아이디'(4~15자 영문/숫자)라
+-- 이메일을 넣으면 형식이 맞지 않아 0건이 매칭되고, 오류도 없이 조용히 지나간다.
+-- 스키마를 다시 실행해도 주인 지정이 유지된다.
+update public.profiles p
+   set is_owner = true
+  from auth.users u
+ where u.id = p.id
+   and lower(u.email) = lower('givpro22@daum.net');
+
 -- 확인:  select handle, nickname, is_owner from public.profiles where is_owner;
 
 
