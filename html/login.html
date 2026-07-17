@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SKALA-FRONT 로그인">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/effects.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="../js/achievements.js"></script>
+    <script src="../js/ambient.js"></script>
+    <script src="../js/supabaseConfig.js"></script>
+    <script type="module" src="../js/supabaseClient.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/auth-ui.js"></script>
+    <script src="../js/dock.js"></script>
+    <script src="../js/guestbook.js"></script>
+    <script src="../js/stats.js"></script>
+    <script src="../js/canvas.js"></script>
+    <script src="../js/presence.js"></script>
+    <script src="../js/login.js"></script>
+    <title>로그인</title>
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">SKALA<span>·</span>FRONT</div>
+        <nav>
+            <a href="index.html">홈</a>
+            <a href="myProfile.html">소개</a>
+            <a href="myClass.html">시간표</a>
+            <a href="holiday.html">휴일</a>
+            <a href="myTrip.html">여행</a>
+            <a href="signUp.html">회원가입</a>
+        </nav>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="테마 전환">🌙</button>
+    </header>
+
+    <div class="container" data-file="login.html">
+        <h1>로그인</h1>
+        <p>가입할 때 사용한 이메일과 비밀번호를 입력해 주세요.</p>
+
+        <form id="loginForm">
+            <fieldset>
+                <legend>계정 정보</legend>
+                <p>
+                    <label for="loginEmail">이메일</label><br>
+                    <input type="email" id="loginEmail" required
+                           placeholder="you@example.com" autocomplete="email">
+                </p>
+                <p>
+                    <label for="loginPw">비밀번호</label><br>
+                    <input type="password" id="loginPw" required
+                           placeholder="비밀번호" autocomplete="current-password">
+                    <button type="button" class="pw-toggle" id="loginPwToggle"
+                            aria-label="비밀번호 표시">👁️</button>
+                </p>
+            </fieldset>
+
+            <div class="btn-row">
+                <input type="submit" id="loginBtn" value="로그인">
+            </div>
+
+            <p class="form-status" id="loginStatus" role="status" aria-live="polite"></p>
+        </form>
+
+        <p class="login-hint">
+            아직 계정이 없으신가요? <a href="signUp.html">회원가입</a>
+        </p>
+    </div>
+
+    <button class="to-top" aria-label="맨 위로">↑</button>
+</body>
+</html>

@@ -9,6 +9,15 @@
     <script src="../js/common.js"></script>
     <script src="../js/achievements.js"></script>
     <script src="../js/ambient.js"></script>
+    <script src="../js/supabaseConfig.js"></script>
+    <script type="module" src="../js/supabaseClient.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/auth-ui.js"></script>
+    <script src="../js/dock.js"></script>
+    <script src="../js/guestbook.js"></script>
+    <script src="../js/stats.js"></script>
+    <script src="../js/canvas.js"></script>
+    <script src="../js/presence.js"></script>
     <script src="../js/signup.js"></script>
     <title>회원가입</title>
 </head>
@@ -30,7 +39,9 @@
         <h1>회원가입</h1>
         <p>SKALA-FRONT 회원가입을 환영합니다. 입력하는 즉시 실시간으로 검증됩니다.</p>
 
-        <form action="signUpResult.html" method="get" id="signupForm">
+        <!-- action/method 없음: 제출은 signup.js 가 Supabase Auth 로 처리한다.
+             (예전 GET 제출은 비밀번호가 URL 쿼리에 그대로 노출됐다) -->
+        <form id="signupForm">
             <fieldset>
                 <legend>계정 정보</legend>
                 <p>
@@ -48,17 +59,18 @@
                     <span class="field-msg" id="pwMsg"></span>
                 </p>
                 <p>
-                    <label for="userEmail">이메일</label><br>
-                    <input type="text" id="userEmail" name="userEmail" placeholder="example">
+                    <label for="userEmail">이메일 <small>(필수 · 로그인에 사용됩니다)</small></label><br>
+                    <input type="text" id="userEmail" name="userEmail" required placeholder="example">
                     @
                     <input type="text" id="emailDomainInput" name="emailDomainInput"
-                           placeholder="직접 입력" style="width:150px;">
+                           required placeholder="직접 입력" style="width:150px;">
                     <select id="emailDomain" name="emailDomain">
                         <option value="direct">직접 입력</option>
                         <option value="naver.com">naver.com</option>
                         <option value="gmail.com">gmail.com</option>
                         <option value="daum.net">daum.net</option>
                     </select>
+                    <span class="field-msg" id="emailMsg"></span>
                 </p>
             </fieldset>
 
@@ -107,10 +119,17 @@
             </fieldset>
 
             <div class="btn-row">
-                <input type="submit" value="동의하고 회원가입">
+                <input type="submit" id="submitBtn" value="동의하고 회원가입">
                 <input type="reset" value="다시 작성">
             </div>
+
+            <!-- 서버(Supabase) 응답 표시 영역 -->
+            <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
         </form>
+
+        <p class="login-hint">
+            이미 계정이 있으신가요? <a href="login.html">로그인</a>
+        </p>
     </div>
 
     <button class="to-top" aria-label="맨 위로">↑</button>

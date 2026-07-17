@@ -2,8 +2,9 @@
    ui-dialog.js — 사이트 테마에 맞춘 커스텀 입력/알림 모달
    · 브라우저 기본 prompt()/alert() 은 스타일을 입힐 수 없어(초록 버튼 등)
      IDE 다크 테마에 맞춘 커스텀 다이얼로그로 대체
-   · window.skPrompt(msg, opts) → Promise<string|null>  (취소 시 null, prompt 와 동일)
-   · window.skAlert(msg, opts)  → Promise<void>
+   · window.skPrompt(msg, opts)  → Promise<string|null>  (취소 시 null, prompt 와 동일)
+   · window.skAlert(msg, opts)   → Promise<void>
+   · window.skConfirm(msg, opts) → Promise<boolean>      (confirm 과 동일)
    · Enter = 확인, Esc = 취소, 오버레이 클릭 = 취소
    ============================================================ */
 
@@ -16,12 +17,15 @@
         });
     }
 
-    // 공통 모달 생성기 (type: "prompt" | "alert")
+    // 공통 모달 생성기 (type: "prompt" | "alert" | "confirm")
     function open(type, message, opts) {
         opts = opts || {};
         return new Promise(function (resolve) {
-            var title = opts.title || (type === "prompt" ? "입력" : "알림");
+            var titles = { prompt: "입력", confirm: "확인", alert: "알림" };
+            var title = opts.title || titles[type];
             var confirmText = opts.confirmText || "확인";
+            // 되돌릴 수 있어야 하는 유형에만 취소 버튼을 붙인다
+            var hasCancel = (type === "prompt" || type === "confirm");
 
             var ov = document.createElement("div");
             ov.className = "sk-dialog-ov";
@@ -39,7 +43,7 @@
                             : '') +
                     '</div>' +
                     '<div class="sk-dialog-foot">' +
-                        (type === "prompt" ? '<button class="btn btn-ghost sk-cancel">취소</button>' : '') +
+                        (hasCancel ? '<button class="btn btn-ghost sk-cancel">취소</button>' : '') +
                         '<button class="btn btn-primary sk-ok">' + esc(confirmText) + '</button>' +
                     '</div>' +
                 '</div>';
@@ -54,14 +58,19 @@
                 ov.classList.remove("show");
                 setTimeout(function () { if (ov.parentNode) ov.remove(); }, 200);
             }
+            // 각 유형의 반환 계약: prompt → 입력값/null, confirm → true/false, alert → undefined
             function confirm() {
                 var val = input ? input.value : null;
                 cleanup();
-                resolve(type === "prompt" ? val : undefined);
+                if (type === "prompt") resolve(val);
+                else if (type === "confirm") resolve(true);
+                else resolve(undefined);
             }
             function cancel() {
                 cleanup();
-                resolve(type === "prompt" ? null : undefined);
+                if (type === "prompt") resolve(null);
+                else if (type === "confirm") resolve(false);
+                else resolve(undefined);
             }
             function onKey(e) {
                 if (e.key === "Enter") { e.preventDefault(); confirm(); }
@@ -82,4 +91,5 @@
 
     window.skPrompt = function (message, opts) { return open("prompt", message, opts); };
     window.skAlert = function (message, opts) { return open("alert", message, opts); };
+    window.skConfirm = function (message, opts) { return open("confirm", message, opts); };
 })();

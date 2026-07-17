@@ -64,6 +64,14 @@ function showToast(message) {
     }, 2200);
 }
 
+/* ---------- 폼 상태 메시지 (가입/로그인/프로필 공용) ----------
+   토스트와 달리 폼 안에 남아 있는 문구. kind: "" | "ok" | "err" */
+function showFormStatus(el, text, kind) {
+    if (!el) return;
+    el.textContent = text;
+    el.className = "form-status " + (kind || "");
+}
+
 // ---------- 실시간 시계 ----------
 function startClock() {
     var el = document.getElementById("clock");
@@ -196,6 +204,10 @@ var CMDK_ITEMS = [
     { label: "휴일 일과", hint: "holiday.html", icon: "🎉", href: "holiday.html" },
     { label: "여행 앨범", hint: "myTrip.html", icon: "🌏", href: "myTrip.html" },
     { label: "회원가입", hint: "signUp.html", icon: "📝", href: "signUp.html" },
+    // 아래 3개는 index.html 의 우측 도크를 연다 (다른 페이지에선 홈으로 보낸 뒤 연다)
+    { label: "방명록 남기기", hint: "guestbook 방명록", icon: "💬", action: "dock:gb" },
+    { label: "사이트 현황 (방문자 수)", hint: "visitors 방문자", icon: "📊", action: "dock:stat" },
+    { label: "업적 랭킹 TOP 10", hint: "ranking leaderboard 랭킹", icon: "🏆", action: "dock:rank" },
     { label: "테마 전환 (다크 / 라이트)", hint: "theme", icon: "🌓", action: "theme" },
     { label: "매트릭스 효과 실행", hint: "matrix", icon: "🟦", action: "matrix" },
     { label: "업적 보기", hint: "achievements", icon: "🏆", action: "ach" },
@@ -304,6 +316,16 @@ function runCmdk(item) {
         if (typeof window.openAmbientSettings === "function") window.openAmbientSettings();
     }
     else if (item.action === "top") { window.scrollTo({ top: 0, behavior: "smooth" }); }
+    else if (item.action && item.action.indexOf("dock:") === 0) {
+        var view = item.action.slice(5);
+        if (typeof window.openDock === "function") {
+            window.openDock(view);
+        } else {
+            // 도크는 홈에만 있다 → 홈으로 이동한 뒤 해당 탭을 열도록 표시를 남긴다
+            try { sessionStorage.setItem("skala-dock-open", view); } catch (e) { /* noop */ }
+            location.href = "index.html";
+        }
+    }
     else if (item.href && item.external) { window.open(item.href, "_blank", "noopener"); }
     else if (item.href) { location.href = item.href; }
 }
