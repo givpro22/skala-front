@@ -48,6 +48,28 @@
   <img src="docs/screenshots/ambient-settings.png" width="49%" alt="배경 코드 글리프 밀도 설정" />
 </p>
 
+### 🆕 Supabase 백엔드 기능
+
+모든 페이지 우측의 **도크 패널**에서 방명록·현황·랭킹·낙서판을 열 수 있습니다.
+(VS Code 사이드바 컨셉 · 스크롤을 따라다님)
+
+| 방명록 (익명 로그인 · 칭호 · 주인 배지) | 업적 랭킹 (칭호 · 회원 전용 안내) |
+|:---:|:---:|
+| ![방명록 패널](docs/screenshots/dock-guestbook.png) | ![업적 랭킹 패널](docs/screenshots/dock-ranking.png) |
+
+| 함께 그리기 (공동 픽셀 캔버스 32×32) | 사이트 현황 (방문자 수 · 인기 명령어) |
+|:---:|:---:|
+| ![공동 픽셀 캔버스](docs/screenshots/dock-canvas.png) | ![사이트 현황 패널](docs/screenshots/dock-stats.png) |
+
+<p align="center">
+  <img src="docs/screenshots/achievements-titles.png" width="70%"
+       alt="히든 업적(??? + 힌트)과 칭호 선택 — 히든 칭호는 빛나는 특수 효과" />
+</p>
+
+> 업적은 **27개**(히든 5개 포함). 해금한 업적의 이름을 **칭호**로 달 수 있고,
+> 히든 업적 칭호는 무지개 그라디언트로 빛납니다. 방명록·랭킹의 칭호와 주인 배지는
+> **서버가 실제 보유·신원을 검증**하므로 위조되지 않습니다.
+
 ---
 
 ## 기술 스택
