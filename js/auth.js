@@ -180,6 +180,12 @@
         return updateProfile({ nickname: nickname });
     }
 
+    /* ---------- 칭호 변경 (achievement id, 없으면 null) ----------
+       가짜 칭호는 공개 표시 RPC 가 걸러내므로 여기선 그냥 저장만 한다. */
+    function setTitle(id) {
+        return updateProfile({ title: id || null });
+    }
+
     /* ---------- 로그아웃 ---------- */
     function signOut() {
         return client().then(function (sb) {
@@ -287,6 +293,7 @@
         getProfile: getProfile,
         updateProfile: updateProfile,
         setNickname: setNickname,
+        setTitle: setTitle,
         onAuthChange: onAuthChange
     };
 })();

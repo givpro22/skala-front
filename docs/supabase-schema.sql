@@ -45,6 +45,11 @@ alter table public.profiles add column if not exists nickname text;
 -- 이 값은 아래 트리거가 지켜서 사용자가 스스로 켤 수 없다 → SQL Editor 에서만 설정.
 alter table public.profiles add column if not exists is_owner boolean not null default false;
 
+-- 선택한 칭호 = 해금한 업적의 id (js/achievements.js LIST 의 id).
+-- 사용자는 자기 title 을 아무 값으로 바꿀 수 있지만(RLS 본인 수정),
+-- 공개 표시 RPC 가 '실제로 그 업적을 보유했는지' 를 검증하므로 가짜 칭호는 안 뜬다.
+alter table public.profiles add column if not exists title text;
+
 alter table public.profiles
     drop constraint if exists profiles_nickname_format;
 alter table public.profiles
@@ -391,6 +396,7 @@ returns table (
     liked_by_me boolean,
     is_mine     boolean,
     is_owner    boolean,
+    title_id    text,
     total_count bigint
 )
 language sql
@@ -412,6 +418,12 @@ as $$
         coalesce(g.user_id = auth.uid(), false),
         -- 사이트 주인이 쓴 글인지 (닉네임 사칭과 구분하는 위조 불가 표시)
         coalesce(p.is_owner, false),
+        -- 선택한 칭호 — 단, '실제로 그 업적을 보유' 할 때만 내보낸다.
+        -- 안 그러면 프로필에 아무 업적 id 나 넣어 가짜 칭호를 달 수 있다.
+        (case when exists (
+            select 1 from public.achievements a
+            where a.user_id = g.user_id and a.achievement_id = p.title
+        ) then p.title else null end),
         -- limit 이 걸리기 전의 전체 개수 (창 함수는 limit 보다 먼저 계산된다)
         count(*) over ()
     from public.guestbook g
@@ -492,7 +504,8 @@ returns table (
     nickname          text,
     achievement_count bigint,
     is_me             boolean,
-    is_owner          boolean
+    is_owner          boolean,
+    title_id          text
 )
 language sql
 security definer
@@ -504,7 +517,12 @@ as $$
         coalesce(p.nickname, '익명'),
         count(a.achievement_id),
         coalesce(p.id = auth.uid(), false),
-        coalesce(p.is_owner, false)
+        coalesce(p.is_owner, false),
+        -- 칭호 — 실제 보유한 업적일 때만 (가짜 칭호 차단)
+        max(case when p.title is not null and exists (
+            select 1 from public.achievements a2
+            where a2.user_id = p.id and a2.achievement_id = p.title
+        ) then p.title end)
     from public.achievements a
     join public.profiles p on p.id = a.user_id
     join auth.users u on u.id = a.user_id

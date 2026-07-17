@@ -12,8 +12,8 @@
         { id: "explorer", icon: "🧭", title: "탐험가", desc: "모든 페이지를 방문했다", how: "홈·소개·시간표·휴일·여행·회원가입·결과 페이지를 모두 방문하세요" },
         { id: "rookie", icon: "🌱", title: "첫 명령", desc: "터미널에 첫 명령어를 입력했다", how: "메인 터미널에 아무 명령어나 입력해보세요 (예: help)" },
         { id: "master", icon: "⌨️", title: "터미널 마스터", desc: "터미널 명령을 15회 사용했다", how: "메인 터미널에서 명령어를 15번 실행하세요" },
-        { id: "matrix", icon: "🟦", title: "네오", desc: "매트릭스 이스터에그를 발견했다", how: "터미널에 matrix 입력, 또는 ⌘K → 매트릭스" },
-        { id: "konami", icon: "🕹️", title: "고전 게이머", desc: "코나미 코드를 입력했다", how: "키보드로 ↑ ↑ ↓ ↓ 를 순서대로 누르세요" },
+        { id: "matrix", icon: "🟦", title: "네오", desc: "매트릭스 이스터에그를 발견했다", how: "터미널에 matrix 입력, 또는 ⌘K → 매트릭스", hidden: true, hint: "터미널에 영화 같은 걸 입력해보면…" },
+        { id: "konami", icon: "🕹️", title: "고전 게이머", desc: "코나미 코드를 입력했다", how: "키보드로 ↑ ↑ ↓ ↓ 를 순서대로 누르세요", hidden: true, hint: "오래된 게임의 그 유명한 커맨드…" },
         { id: "palette", icon: "⚡", title: "파워 유저", desc: "명령 팔레트를 열었다", how: "⌘K (또는 Ctrl+K) 를 누르세요" },
         { id: "theme", icon: "🌗", title: "빛과 어둠", desc: "테마를 전환했다", how: "우측 상단 🌙 버튼으로 다크/라이트를 전환하세요" },
         { id: "gamer", icon: "✊", title: "승부사", desc: "가위바위보 게임을 했다", how: "터미널에 rps 가위 (또는 바위/보) 를 입력하세요" },
@@ -27,15 +27,15 @@
         { id: "vlog", icon: "🎬", title: "시청자", desc: "여행 브이로그를 재생했다", how: "여행 앨범 페이지에서 브이로그 영상을 재생하세요" },
         { id: "dj", icon: "🎧", title: "여행 DJ", desc: "여행 배경 음악을 틀었다", how: "여행 앨범 페이지의 음악 플레이어를 재생하세요" },
         { id: "gallery", icon: "🖼️", title: "감상가", desc: "여행 사진을 크게 봤다", how: "여행 앨범에서 사진을 클릭해 라이트박스로 열어보세요" },
-        { id: "nightowl", icon: "🦉", title: "올빼미", desc: "새벽에 방문했다", how: "새벽 0시~5시 사이에 사이트를 방문해보세요" },
+        { id: "nightowl", icon: "🦉", title: "올빼미", desc: "새벽에 방문했다", how: "새벽 0시~5시 사이에 사이트를 방문해보세요", hidden: true, hint: "남들이 잠든 시간에…" },
         { id: "comeback", icon: "🔁", title: "단골", desc: "다른 날 다시 찾아왔다", how: "오늘 말고 다른 날에 다시 방문해주세요" },
         { id: "painter", icon: "🎨", title: "화백", desc: "함께 그리기에 픽셀을 칠했다", how: "우측 도크의 🎨 낙서판에서 칸을 칠해보세요" },
         { id: "winner", icon: "🎯", title: "행운아", desc: "Up-Down 게임에서 정답을 맞혔다", how: "터미널에 updown 을 입력해 숫자를 맞혀보세요" },
         { id: "champion", icon: "✌️", title: "챔피언", desc: "가위바위보에서 이겼다", how: "터미널에 rps 가위/바위/보 를 입력해 이겨보세요" },
         { id: "member", icon: "🪪", title: "정식 회원", desc: "회원가입을 완료했다", how: "회원가입 페이지에서 계정을 만드세요" },
         { id: "collector", icon: "🏅", title: "수집가", desc: "업적 절반을 모았다", how: "전체 업적의 절반 이상을 해금하세요" },
-        { id: "completionist", icon: "👑", title: "올클리어", desc: "모든 업적을 해금했다", how: "이 목록의 모든 업적을 달성하세요" },
-        { id: "hacker", icon: "🕶️", title: "해커", desc: "콘솔에서 비밀 명령을 찾았다", how: "브라우저 개발자 콘솔에서 skala() 를 실행해보세요" }
+        { id: "completionist", icon: "👑", title: "올클리어", desc: "모든 업적을 해금했다", how: "이 목록의 모든 업적을 달성하세요", hidden: true, hint: "이 목록을 전부 채우면…" },
+        { id: "hacker", icon: "🕶️", title: "해커", desc: "콘솔에서 비밀 명령을 찾았다", how: "브라우저 개발자 콘솔에서 skala() 를 실행해보세요", hidden: true, hint: "F12… 개발자만 아는 곳에 뭔가 있을지도" }
     ];
 
     var KEY = "skala-ach";
@@ -202,8 +202,44 @@
     window.getAchievements = function () {
         var s = load();
         return LIST.map(function (a) {
-            return { icon: a.icon, title: a.title, desc: a.desc, how: a.how, unlocked: !!s[a.id] };
+            return { icon: a.icon, title: a.title, desc: a.desc, how: a.how,
+                     unlocked: !!s[a.id], hidden: !!a.hidden };
         });
+    };
+
+    /* ============================================================
+       칭호 (title)
+       · 해금한 업적의 이름(a.title)을 칭호로 달 수 있다.
+       · 선택은 achievement id 로 저장한다 (localStorage + 로그인 시 profiles.title).
+       · 공개 표시(방명록·랭킹)는 서버가 '실제 보유' 를 검증하므로 가짜 칭호는 안 뜬다.
+       · 히든 업적의 칭호는 특수 효과(빛나는 그라디언트)로 렌더된다.
+       ============================================================ */
+    var TITLE_KEY = "skala-title";
+
+    /* id 로 업적 메타를 돌려준다 (없으면 null). 다른 모듈이 칭호 텍스트·효과를 그릴 때 쓴다. */
+    window.getAchievementMeta = function (id) {
+        var a = meta(id);
+        if (!a) return null;
+        return { id: a.id, icon: a.icon, title: a.title, hidden: !!a.hidden };
+    };
+
+    window.getTitle = function () {
+        try { return localStorage.getItem(TITLE_KEY) || ""; } catch (e) { return ""; }
+    };
+
+    /* 칭호 선택. 빈 값이면 해제. 해금하지 않은 업적은 달 수 없다. */
+    window.setTitle = function (id) {
+        if (id) {
+            var s = load();
+            if (!meta(id) || !s[id]) return false;   // 미해금 칭호는 거부
+        }
+        try { localStorage.setItem(TITLE_KEY, id || ""); } catch (e) { /* noop */ }
+        // 로그인 상태면 서버에도 반영 (공개 표시용). 실패해도 로컬 선택은 유지.
+        if (window.SkalaAuth && window.SkalaAuth.setTitle) {
+            window.SkalaAuth.setTitle(id || null);
+        }
+        window.dispatchEvent(new CustomEvent("skala-title-changed", { detail: { id: id || "" } }));
+        return true;
     };
 
     /* ---------- 상태바 배지 ---------- */
@@ -214,19 +250,51 @@
     }
     window.updateAchBadge = updateBadge;
 
+    /* HTML 이스케이프 (업적 텍스트는 우리 데이터라 안전하지만 습관적으로) */
+    function esc(t) {
+        return String(t).replace(/[&<>"]/g, function (c) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+        });
+    }
+
     /* ---------- 전체 업적 패널 ---------- */
     function openAchievements() {
         if (document.getElementById("achModalOv")) return;
         var s = load();
         var got = countGot();
+        var picked = window.getTitle();
+
         var items = LIST.map(function (a) {
             var on = !!s[a.id];
-            return '<div class="ach-item ' + (on ? "on" : "off") + '">' +
-                '<span class="ach-i">' + (on ? a.icon : "🔒") + '</span>' +
+            var hiddenLocked = a.hidden && !on;
+
+            // 히든 미해금: 이름·설명을 감추고 힌트만 (??? + 살짝 귀띔)
+            var name, detail;
+            if (hiddenLocked) {
+                name = '<span class="ach-hidden">??? <span class="ach-hidden-tag">히든</span></span>';
+                detail = '<span class="ach-hint">🔒 ' + esc(a.hint || "숨겨진 업적입니다") + '</span>';
+            } else {
+                name = esc(a.title) + (on ? '' : ' <span class="ach-lock">잠김</span>') +
+                       (a.hidden ? ' <span class="ach-hidden-tag on">히든</span>' : '');
+                detail = on ? "✓ " + esc(a.desc) : "달성 방법 · " + esc(a.how);
+            }
+
+            // 해금한 업적은 칭호로 선택 가능 (라디오처럼)
+            var titleBtn = '';
+            if (on) {
+                var sel = picked === a.id;
+                titleBtn = '<button type="button" class="ach-pick' + (sel ? ' on' : '') +
+                    (a.hidden ? ' hidden-title' : '') + '" data-title="' + a.id + '">' +
+                    (sel ? '✓ 사용 중' : '칭호 달기') + '</button>';
+            }
+
+            return '<div class="ach-item ' + (on ? "on" : "off") +
+                    (hiddenLocked ? " locked-hidden" : "") + '">' +
+                '<span class="ach-i">' + (on ? a.icon : (hiddenLocked ? "❔" : "🔒")) + '</span>' +
                 '<div class="ach-t">' +
-                    '<div class="ach-name">' + a.title + (on ? '' : ' <span class="ach-lock">잠김</span>') + '</div>' +
-                    '<div class="ach-how">' + (on ? "✓ " + a.desc : "달성 방법 · " + a.how) + '</div>' +
-                '</div></div>';
+                    '<div class="ach-name">' + name + '</div>' +
+                    '<div class="ach-how">' + detail + '</div>' +
+                '</div>' + titleBtn + '</div>';
         }).join("");
 
         var ov = document.createElement("div");
@@ -239,9 +307,23 @@
                     '<button class="ach-close" aria-label="닫기">&times;</button>' +
                 '</div>' +
                 '<div class="ach-bar"><div class="ach-bar-fill" style="width:' + (got / LIST.length * 100) + '%"></div></div>' +
+                '<p class="ach-title-help">해금한 업적의 이름을 <b>칭호</b>로 달 수 있어요. ' +
+                    '방명록·랭킹에 표시됩니다. <span class="ach-hidden-tag on">히든</span> 칭호는 특별하게 빛나요.</p>' +
                 '<div class="ach-list">' + items + '</div>' +
             '</div>';
         document.body.appendChild(ov);
+
+        // 칭호 달기/해제 (같은 칭호 다시 누르면 해제)
+        ov.querySelectorAll(".ach-pick").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                var id = btn.getAttribute("data-title");
+                var already = btn.classList.contains("on");
+                window.setTitle(already ? "" : id);
+                // 패널을 다시 그려 선택 상태 갱신
+                close();
+                setTimeout(openAchievements, 60);
+            });
+        });
 
         function close() {
             ov.classList.remove("show");
