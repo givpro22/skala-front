@@ -1095,6 +1095,633 @@ input.invalid { border-color: var(--danger); }
 
 .btn-row { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
 
+/* ---------- 지금 접속 중 (Presence) ---------- */
+
+.sb.presence { display: inline-flex; align-items: center; gap: 5px; }
+.presence-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #3fb950;
+    animation: presence-pulse 2s ease-in-out infinite;
+}
+@keyframes presence-pulse {
+    0%, 100% { opacity: 1;   box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.5); }
+    50%      { opacity: 0.7; box-shadow: 0 0 0 4px rgba(63, 185, 80, 0); }
+}
+
+/* ---------- 남의 커서 ---------- */
+
+/* fixed + overflow:hidden — 레이어가 문서 크기에 절대 영향을 주지 않는다.
+   absolute 로 두면 화면 밖의 커서(특히 닉네임 라벨)가 문서를 넓혀
+   가로 스크롤바가 생긴다. 대신 스크롤할 때 JS 가 위치를 다시 계산한다. */
+.cursor-layer {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: 1400;        /* 도크(230) 위, 모달(1500) 아래 */
+    pointer-events: none; /* 절대 클릭을 가로채면 안 된다 */
+}
+.rc {
+    position: absolute;
+    top: 0; left: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 2px;
+    /* 좌표 갱신이 60ms 마다라 부드럽게 이어 붙인다 */
+    transition: transform 0.09s linear;
+    will-change: transform;
+}
+.rc-name {
+    margin-top: 10px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: #0d1117;
+    white-space: nowrap;
+    max-width: 12ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 움직임을 싫어하는 사용자에게는 커서를 감춘다 */
+@media (prefers-reduced-motion: reduce) {
+    .cursor-layer { display: none; }
+    .presence-dot { animation: none; }
+}
+
+
+/* ---------- 인기 명령어 ---------- */
+
+.dock-h3 {
+    margin: 22px 0 4px;
+    font-size: 0.95rem;
+    color: var(--brand-dark);
+}
+.cmd-list { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-direction: column; gap: 5px; }
+.cmd-row { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+.cmd-rank { font-family: var(--mono); color: var(--text-soft); min-width: 1.2em; }
+.cmd-name {
+    font-family: var(--mono);
+    background: none;
+    border: none;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    color: var(--brand);
+    cursor: pointer;
+    min-width: 6.5em;
+    text-align: left;
+}
+.cmd-name:hover { background: var(--brand-light); text-decoration: underline; }
+.cmd-bar { flex: 1; height: 6px; background: var(--surface-alt); border-radius: 999px; overflow: hidden; }
+.cmd-fill { display: block; height: 100%; background: var(--brand); border-radius: 999px; }
+.cmd-count { font-family: var(--mono); font-size: 0.78rem; color: var(--text-soft); min-width: 2em; text-align: right; }
+
+
+/* ---------- 함께 그리기 (픽셀 캔버스) ---------- */
+
+.cv-palette { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0; }
+.cv-swatch {
+    width: 24px; height: 24px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: transform var(--transition), border-color var(--transition);
+}
+.cv-swatch:hover { transform: scale(1.12); }
+.cv-swatch.on { border-color: var(--brand); transform: scale(1.12); }
+
+.cv-wrap {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    line-height: 0;
+}
+#cvBoard {
+    width: 100%;
+    height: auto;
+    display: block;
+    cursor: crosshair;
+    /* 픽셀 아트가 뭉개지지 않도록 */
+    image-rendering: pixelated;
+}
+
+
+/* ---------- 상단바 계정 칩 ---------- */
+
+.acct { position: relative; display: flex; align-items: center; }
+
+.acct-login {
+    font-size: 0.82rem;
+    font-family: var(--mono);
+    color: var(--text-soft);
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition);
+}
+.acct-login:hover { border-color: var(--brand); color: var(--brand); }
+
+.acct-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--text);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+.acct-chip:hover { border-color: var(--brand); }
+
+/* 로그인 중임을 알리는 초록 점 (VS Code 원격 표시등 느낌) */
+.acct-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--syn-green, #3fb950);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--syn-green, #3fb950) 25%, transparent);
+    flex-shrink: 0;
+}
+
+.acct-name {
+    max-width: 10ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.acct-caret { color: var(--text-soft); font-size: 0.7rem; }
+
+.acct-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 300;              /* 상단바(100) 위 */
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+}
+.acct-menu a,
+.acct-menu button {
+    text-align: left;
+    padding: 7px 10px;
+    background: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--text);
+    text-decoration: none;
+    cursor: pointer;
+}
+.acct-menu a:hover,
+.acct-menu button:hover { background: var(--surface-alt); color: var(--brand); }
+.acct-menu .acct-out:hover { color: var(--danger); }
+
+
+/* ---------- Supabase 연동 (가입/로그인/내 계정) ---------- */
+
+/* 서버 응답 표시 — 성공/실패 모두 여기에 */
+.form-status {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    margin-top: 10px;
+    min-height: 1.2em;
+    color: var(--text-soft);
+}
+.form-status.ok  { color: var(--accent); }
+.form-status.err { color: var(--danger); }
+
+.login-hint {
+    margin-top: 16px;
+    font-size: 0.9rem;
+    color: var(--text-soft);
+}
+
+/* myProfile.html 의 "내 계정" 카드 — 로그인 시에만 표시 */
+.account-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    margin: 0 0 26px;
+    box-shadow: var(--shadow-md);
+}
+.account-card h2 { margin: 0 0 4px; }
+.account-card .account-meta {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    margin: 0 0 14px;
+}
+
+/* [hidden] 이 flex/grid 등에 밀리지 않도록 확실히 숨긴다 */
+[hidden] { display: none !important; }
+
+
+/* ---------- 우측 도크 (방명록 · 현황 · 랭킹) ----------
+   z-index 는 to-top(200) · help-fab(210) 위, 모달(1500+) 아래에 둔다.
+   다이얼로그·명령 팔레트가 항상 도크를 덮어야 하기 때문.
+
+   아이콘 바(rail)는 화면 오른쪽 끝에 붙고, 패널은 그 왼쪽에 열린다.
+   rail 이 패널보다 위에 있어야 패널이 열린 상태에서도 탭을 바꿀 수 있다. */
+:root {
+    --dock-w: 370px;        /* 패널 너비 */
+    --dock-rail-w: 50px;    /* 아이콘 바 너비 */
+    /* 상단바 높이 — dock.js 가 실제 높이를 재서 덮어쓴다.
+       이 값이 틀리면 패널이 상단 네비게이션을 가린다. */
+    --topbar-h: 61px;
+}
+
+.dock-rail {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 240;                    /* 패널(230)보다 위 — 열린 채로도 탭 전환 가능 */
+    width: var(--dock-rail-w);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-right: none;
+    border-radius: var(--radius) 0 0 var(--radius);
+    box-shadow: var(--shadow-md);
+}
+
+/* 스프라이트 원본은 화면에 나오지 않는다 */
+.icon-sprite { display: none; }
+
+/* 선 아이콘 공통 — 색은 currentColor 를 따라가므로
+   테마 전환·활성 상태에서 별도 처리가 필요 없다 */
+.ico {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+.dock-tab {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    background: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--text-soft);
+    transition: background var(--transition), color var(--transition);
+}
+.dock-tab .ico { width: 20px; height: 20px; }
+.dock-tab:hover { background: var(--surface-alt); color: var(--text); }
+.dock-tab.active { background: var(--brand-light); color: var(--brand); }
+/* 활성 탭 표시 — VS Code 사이드바의 왼쪽 선 */
+.dock-tab.active::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 8px; bottom: 8px;
+    width: 2px;
+    background: var(--brand);
+    border-radius: 2px;
+}
+
+/* 아직 방명록을 안 열어본 방문자 유도 배지 */
+.dock-dot {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--danger);
+    box-shadow: 0 0 0 2px var(--surface);
+}
+
+.dock-panel {
+    position: fixed;
+    right: var(--dock-rail-w);    /* 아이콘 바 왼쪽에 붙는다 */
+    top: var(--topbar-h);         /* 상단 네비게이션을 가리지 않는다 */
+    bottom: 26px;                 /* 상태바(26px) 위까지 */
+    width: var(--dock-w);
+    max-width: calc(100vw - var(--dock-rail-w));
+    z-index: 230;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    box-shadow: -8px 0 28px rgba(0, 0, 0, 0.28);
+    animation: dock-in 0.22s ease;
+}
+
+@keyframes dock-in {
+    from { transform: translateX(100%); opacity: 0.5; }
+    to   { transform: translateX(0);    opacity: 1; }
+}
+
+.dock-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+.dock-title {
+    font-family: var(--mono);
+    font-weight: 700;
+    color: var(--brand-dark);
+}
+.dock-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--text-soft);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+}
+.dock-close:hover { background: var(--surface-alt); color: var(--danger); }
+
+/* 내용이 길면 패널 안에서만 스크롤된다 */
+.dock-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+}
+
+.dock-sub {
+    font-size: 0.82rem;
+    color: var(--text-soft);
+    margin: 0 0 12px;
+    line-height: 1.5;
+}
+
+/* 패널이 열리면 우측 하단 버튼들을 패널 왼쪽으로 밀어낸다.
+   (transform 은 .to-top 이 show/hover 에 이미 쓰고 있으므로 right 를 옮긴다) */
+body.dock-open .to-top,
+body.dock-open .help-fab { right: calc(var(--dock-w) + var(--dock-rail-w) + 22px); }
+
+/* 좁은 화면: 하단 시트로 전환 */
+@media (max-width: 820px) {
+    .dock-rail {
+        top: auto;
+        bottom: 150px;             /* to-top(22) · help-fab(96) 위로 */
+        transform: none;
+        flex-direction: row;
+        width: auto;
+        border-radius: var(--radius) 0 0 var(--radius);
+        transition: bottom 0.22s ease;
+    }
+    /* 시트가 아래를 덮으므로 아이콘 바를 시트 위로 올린다 */
+    body.dock-open .dock-rail { bottom: calc(72vh + 26px + 8px); }
+
+    .dock-panel {
+        top: auto;
+        left: 0;
+        right: 0;
+        bottom: 26px;
+        width: auto;
+        max-width: none;
+        height: 72vh;
+        border-left: none;
+        border-top: 1px solid var(--border);
+        border-radius: var(--radius) var(--radius) 0 0;
+        box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.32);
+        animation: dock-up 0.22s ease;
+    }
+    @keyframes dock-up {
+        from { transform: translateY(100%); opacity: 0.5; }
+        to   { transform: translateY(0);    opacity: 1; }
+    }
+    /* 시트가 화면 아래를 덮으므로 버튼을 밀 필요가 없다 */
+    body.dock-open .to-top,
+    body.dock-open .help-fab { right: 22px; }
+}
+
+
+/* ---------- 방명록 ---------- */
+
+.gb-count { color: var(--text-soft); font-size: 0.85rem; margin-left: 6px; }
+
+.gb-form {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin: 12px 0 18px;
+}
+.gb-fields { display: flex; flex-direction: column; gap: 8px; }
+.gb-fields input,
+.gb-fields textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+.gb-fields textarea { resize: vertical; min-height: 68px; }
+
+.gb-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.gb-list { display: flex; flex-direction: column; gap: 10px; }
+
+.gb-empty {
+    color: var(--text-soft);
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 18px 0;
+}
+
+.gb-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    transition: border-color var(--transition);
+}
+.gb-item:hover { border-color: var(--brand); }
+.gb-item.mine { border-left-color: var(--brand); }
+
+.gb-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.gb-nick { font-weight: 700; color: var(--brand-dark); }
+.gb-badge {
+    font-size: 0.7rem;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: var(--brand-light);
+    color: var(--brand);
+}
+.gb-time {
+    margin-left: auto;
+    font-size: 0.78rem;
+    color: var(--text-soft);
+    font-family: var(--mono);
+}
+
+.gb-body {
+    margin: 8px 0 10px;
+    /* 사용자가 붙여넣은 긴 문자열이 레이아웃을 깨지 않도록 */
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+/* 긴 글은 4줄까지만 — 좁은 패널이 글 하나로 꽉 차는 것을 막는다 */
+.gb-body.clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.gb-more {
+    background: none;
+    border: none;
+    padding: 0 0 8px;
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    color: var(--brand);
+    cursor: pointer;
+}
+.gb-more:hover { text-decoration: underline; }
+
+.gb-loadmore {
+    width: 100%;
+    margin-top: 4px;
+    font-size: 0.82rem;
+}
+
+.gb-foot { display: flex; align-items: center; gap: 8px; }
+
+.gb-like, .gb-del {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 0.8rem;
+    font-family: var(--mono);
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+.gb-like .ico { width: 14px; height: 14px; }
+.gb-like:hover { border-color: var(--danger); color: var(--danger); }
+/* 좋아요를 누른 상태에서만 하트를 채운다 */
+.gb-like.on { border-color: var(--danger); color: var(--danger); }
+.gb-like.on .ico { fill: currentColor; }
+.gb-del:hover { border-color: var(--danger); color: var(--danger); }
+.gb-like:disabled { opacity: 0.5; cursor: default; }
+
+
+/* ---------- 방문자 수 ---------- */
+
+.visit-widget { display: flex; gap: 10px; margin: 10px 0 4px; }
+.visit-box {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    text-align: center;
+}
+.visit-num {
+    display: block;
+    font-family: var(--mono);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--brand-dark);
+    line-height: 1.2;
+}
+.visit-num.small { font-size: 1.2rem; color: var(--text-soft); }
+.visit-label { font-size: 0.78rem; color: var(--text-soft); }
+
+
+/* ---------- 업적 랭킹 ---------- */
+
+.lb-sub { color: var(--text-soft); font-weight: 400; font-size: 0.8rem; }
+
+.lb-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.lb-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+}
+.lb-row.me { border-color: var(--brand); background: var(--brand-light); }
+
+.lb-rank {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    min-width: 2.4em;
+    color: var(--text-soft);
+}
+/* 상위 3명 — 메달 이모지 대신 색과 굵기로 구분 */
+.lb-rank.top { color: var(--brand); font-weight: 700; }
+.lb-nick {
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.lb-tag {
+    font-size: 0.68rem;
+    padding: 1px 5px;
+    border-radius: 999px;
+    background: var(--brand);
+    color: #fff;
+}
+.lb-count {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--mono);
+    color: var(--text-soft);
+}
+.lb-count .ico { width: 14px; height: 14px; }
+
+.lb-empty { color: var(--text-soft); font-size: 0.85rem; padding: 10px 0; }
+.lb-me {
+    font-size: 0.82rem;
+    color: var(--text-soft);
+    font-family: var(--mono);
+    margin: 0 0 8px;
+}
+.lb-refresh { font-size: 0.8rem; padding: 5px 12px; }
+
 input[type="submit"], input[type="reset"], .btn {
     padding: 10px 20px;
     border: 1px solid var(--border);

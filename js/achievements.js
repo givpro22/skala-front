@@ -20,7 +20,16 @@
         { id: "helper", icon: "❔", title: "길잡이", desc: "도움말을 열어봤다", how: "우측 하단 보라색 ? 버튼을 누르세요" },
         { id: "ambient", icon: "✨", title: "커스터마이저", desc: "배경 밀도를 조절했다", how: "명령 팔레트에서 '배경 캐릭터 설정'을 열어 밀도를 바꾸세요" },
         { id: "weather", icon: "🌦️", title: "기상캐스터", desc: "실시간 날씨를 조회했다", how: "메인 우측 '실시간 날씨'에서 도시를 바꾸거나 터미널에 weather 를 입력하세요" },
-        { id: "player", icon: "🎮", title: "미니앱 플레이어", desc: "미니 앱을 실행했다", how: "Up-Down 게임·성적 계산기·내 가방 보기 버튼을 눌러보세요" }
+        { id: "player", icon: "🎮", title: "미니앱 플레이어", desc: "미니 앱을 실행했다", how: "Up-Down 게임·성적 계산기·내 가방 보기 버튼을 눌러보세요" },
+        { id: "guest", icon: "✍️", title: "방명록 손님", desc: "방명록에 글을 남겼다", how: "우측 도크의 방명록에 닉네임과 한 마디를 남겨보세요" },
+        { id: "liker", icon: "💖", title: "다정한 사람", desc: "방명록 글에 좋아요를 눌렀다", how: "방명록의 다른 글에 하트를 눌러보세요" },
+        { id: "ranker", icon: "📈", title: "경쟁심", desc: "업적 랭킹을 확인했다", how: "우측 도크의 🏆 랭킹 탭을 열어보세요" },
+        { id: "vlog", icon: "🎬", title: "시청자", desc: "여행 브이로그를 재생했다", how: "여행 앨범 페이지에서 브이로그 영상을 재생하세요" },
+        { id: "dj", icon: "🎧", title: "여행 DJ", desc: "여행 배경 음악을 틀었다", how: "여행 앨범 페이지의 음악 플레이어를 재생하세요" },
+        { id: "gallery", icon: "🖼️", title: "감상가", desc: "여행 사진을 크게 봤다", how: "여행 앨범에서 사진을 클릭해 라이트박스로 열어보세요" },
+        { id: "nightowl", icon: "🦉", title: "올빼미", desc: "새벽에 방문했다", how: "새벽 0시~5시 사이에 사이트를 방문해보세요" },
+        { id: "comeback", icon: "🔁", title: "단골", desc: "다른 날 다시 찾아왔다", how: "오늘 말고 다른 날에 다시 방문해주세요" },
+        { id: "painter", icon: "🎨", title: "화백", desc: "함께 그리기에 픽셀을 칠했다", how: "우측 도크의 🎨 낙서판에서 칸을 칠해보세요" }
     ];
 
     var KEY = "skala-ach";
@@ -32,6 +41,68 @@
     function save(o) { localStorage.setItem(KEY, JSON.stringify(o)); }
     function meta(id) { for (var i = 0; i < LIST.length; i++) if (LIST[i].id === id) return LIST[i]; return null; }
     function countGot() { var s = load(), n = 0; LIST.forEach(function (a) { if (s[a.id]) n++; }); return n; }
+
+    /* ============================================================
+       Supabase 동기화 (로그인 상태에서만)
+       · localStorage 가 원본 — 오프라인·비로그인에서도 업적은 그대로 동작한다.
+       · Supabase 는 기기 간 사본. 실패해도 로컬 진행에는 영향을 주지 않는다.
+       · 로그인 시 원격↔로컬을 합집합으로 병합하므로,
+         가입 전에 쌓아둔 업적도 계정에 그대로 올라간다.
+       ============================================================ */
+
+    /* supabase 스크립트가 없는 페이지도 있으므로 항상 방어적으로 접근 */
+    function sbReady() {
+        return window.supabaseReady || Promise.reject(new Error("supabase 미설정"));
+    }
+
+    function pushRemote(ids) {
+        if (!ids.length) return Promise.resolve();
+        return sbReady().then(function (sb) {
+            // getSession() 은 localStorage 를 읽는다 — getUser() 와 달리 네트워크 왕복이 없다.
+            return sb.auth.getSession().then(function (u) {
+                if (!u.data || !u.data.session) return;
+                var rows = ids.map(function (id) {
+                    return { user_id: u.data.session.user.id, achievement_id: id };
+                });
+                // 이미 있는 업적은 그대로 둔다 (최초 해금 시각 보존)
+                return sb.from("achievements")
+                    .upsert(rows, { onConflict: "user_id,achievement_id", ignoreDuplicates: true });
+            });
+        }).catch(function () { /* 동기화 실패는 조용히 무시 — 로컬이 원본 */ });
+    }
+
+    function syncAll() {
+        return sbReady().then(function (sb) {
+            // getSession() 은 localStorage 를 읽는다 — getUser() 와 달리 네트워크 왕복이 없다.
+            return sb.auth.getSession().then(function (u) {
+                if (!u.data || !u.data.session) return;
+
+                return sb.from("achievements").select("achievement_id, unlocked_at")
+                    .then(function (res) {
+                        if (res.error) return;
+
+                        var local = load();
+                        var changed = false;
+
+                        // 원격 → 로컬
+                        (res.data || []).forEach(function (row) {
+                            if (!local[row.achievement_id]) {
+                                local[row.achievement_id] = new Date(row.unlocked_at).getTime();
+                                changed = true;
+                            }
+                        });
+                        if (changed) { save(local); updateBadge(); }
+
+                        // 로컬 → 원격 (원격에 없는 것만)
+                        var remoteIds = (res.data || []).map(function (r) { return r.achievement_id; });
+                        var localOnly = Object.keys(local).filter(function (id) {
+                            return meta(id) && remoteIds.indexOf(id) < 0;
+                        });
+                        return pushRemote(localOnly);
+                    });
+            });
+        }).catch(function () { /* 비로그인·미설정 — 무시 */ });
+    }
 
     /* ---------- 폭죽 ---------- */
     function burst(cx, cy) {
@@ -96,6 +167,9 @@
         save(state);
         showUnlockEffect(m);
         updateBadge();
+        pushRemote([id]);   // 로그인 상태면 계정에도 기록 (실패해도 로컬은 유지)
+        // 랭킹 위젯 등이 스스로 갱신할 수 있게 알린다
+        window.dispatchEvent(new CustomEvent("skala-achievement-unlocked", { detail: { id: id } }));
     };
 
     window.getAchievements = function () {
@@ -169,6 +243,31 @@
             localStorage.setItem(vkey, JSON.stringify(visited));
         }
         if (PAGES.every(function (p) { return visited.indexOf(p) >= 0; })) window.unlock("explorer");
+
+        /* ---------- 올빼미: 새벽 0~5시 방문 ---------- */
+        var hour = new Date().getHours();
+        if (hour >= 0 && hour < 5) window.unlock("nightowl");
+
+        /* ---------- 단골: 처음 온 날과 다른 날 재방문 ----------
+           방문 '날짜'만 저장한다 (시각·횟수는 쓰지 않는다) */
+        try {
+            var dkey = "skala-first-day";
+            var today = new Date().toLocaleDateString("sv");   // YYYY-MM-DD
+            var first = localStorage.getItem(dkey);
+            if (!first) localStorage.setItem(dkey, today);
+            else if (first !== today) window.unlock("comeback");
+        } catch (e) { /* 시크릿 모드 등 — 업적만 못 받을 뿐 */ }
+
         updateBadge();
+
+        // 계정의 업적과 병합한다.
+        // onAuthChange 는 페이지 로드 시 INITIAL_SESSION 으로 한 번 발화하므로
+        // 최초 병합과 이후 로그인 시 병합이 모두 여기서 처리된다.
+        // (별도로 syncAll() 을 또 부르면 매 페이지 로드마다 동기화가 2번 돈다)
+        if (window.SkalaAuth) {
+            window.SkalaAuth.onAuthChange(function (user) {
+                if (user) syncAll();
+            });
+        }
     });
 })();

@@ -38,6 +38,17 @@ document.addEventListener("DOMContentLoaded", function () {
         signup: "signUp.html", 회원가입: "signUp.html"
     };
 
+    /* 도크 탭을 열고 결과를 터미널에 알린다.
+       도크는 홈에만 있으므로 없으면 안내만 한다. */
+    function openDockOr(view, label) {
+        if (typeof window.openDock === "function") {
+            window.openDock(view);
+            print("우측 패널에 " + label + "을(를) 열었어요.", "accent");
+        } else {
+            print(label + "은(는) 홈 화면에서만 볼 수 있어요.", "muted");
+        }
+    }
+
     var COMMANDS = {
         help: function () {
             print("사용 가능한 명령어:", "muted");
@@ -62,6 +73,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 ["joke", "개발자 유머"],
                 ["coffee", "커피 한 잔"],
                 ["achievements", "업적 목록"],
+                ["guestbook", "방명록 남기기 (우측 패널)"],
+                ["visitors", "오늘 방문자 수"],
+                ["ranking", "업적 랭킹 TOP 10"],
                 ["date", "현재 시각"],
                 ["clear", "화면 지우기"]
             ];
@@ -170,6 +184,10 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         theme: function () { if (typeof toggleTheme === "function") toggleTheme(); if (window.unlock) window.unlock("theme"); print("테마를 전환했어요."); },
         matrix: function () { if (typeof window.runMatrix === "function") window.runMatrix(); print("실행 중... (화면 클릭 시 종료)", "muted"); },
+        /* 우측 도크 열기 — 실제 내용은 dock.js / guestbook.js / stats.js 가 담당 */
+        guestbook: function () { openDockOr("gb", "방명록"); },
+        visitors: function () { openDockOr("stat", "사이트 현황"); },
+        ranking: function () { openDockOr("rank", "업적 랭킹"); },
         date: function () { print(new Date().toLocaleString("ko-KR")); },
         echo: function (arg) { print(esc(arg)); },
         whoami: function () { print("guest@skala — 방문객님 환영합니다."); },
@@ -264,8 +282,18 @@ document.addEventListener("DOMContentLoaded", function () {
         var name = parts[0].toLowerCase();
         var arg = parts.slice(1).join(" ");
         var fn = COMMANDS[name];
-        if (fn) fn(arg);
+        if (fn) { fn(arg); logCommand(name); }
         else print("command not found: " + esc(name) + " — 'help' 를 입력해보세요", "err");
+    }
+
+    /* 인기 명령어 집계 — 알려진 명령어 '이름'만 보낸다.
+       인자(arg)는 절대 보내지 않는다: echo·cowsay 에 뭘 썼는지는 남길 이유가 없다.
+       실패해도 터미널 동작에는 아무 영향이 없어야 하므로 조용히 무시한다. */
+    function logCommand(name) {
+        if (!window.supabaseReady) return;
+        window.supabaseReady.then(function (sb) {
+            return sb.rpc("log_command", { cmd: name });
+        }).catch(function () { /* 집계 실패는 무시 */ });
     }
 
     input.addEventListener("keydown", function (e) {
@@ -283,6 +311,25 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault(); output.innerHTML = "";
         }
     });
+
+    /* 도크의 '인기 명령어' 등 바깥에서 명령을 실행할 수 있게 노출한다.
+       터미널을 화면에 보여준 뒤 실행해야 결과가 보인다. */
+    window.runTerminal = function (cmd) {
+        run(cmd);
+        var term = document.querySelector(".terminal");
+        if (term) term.scrollIntoView({ behavior: "smooth", block: "center" });
+        input.focus();
+    };
+
+    // 다른 페이지에서 인기 명령어를 눌러 홈으로 넘어온 경우 이어서 실행한다
+    (function pendingCommand() {
+        var cmd = null;
+        try {
+            cmd = sessionStorage.getItem("skala-run-cmd");
+            if (cmd) sessionStorage.removeItem("skala-run-cmd");
+        } catch (e) { /* noop */ }
+        if (cmd) setTimeout(function () { window.runTerminal(cmd); }, 400);
+    })();
 
     // 터미널 아무 곳이나 클릭하면 입력창 포커스
     body.addEventListener("click", function (e) {

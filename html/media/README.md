@@ -10,6 +10,10 @@
 - `trip1.svg`, `trip2.svg`, `trip3.svg` — 여행 사진 (플레이스홀더 SVG)
 - `travel-music.wav` — 배경 음악 (플레이스홀더, 파이썬 생성)
 - `vlog-poster.svg` — 영상 포스터 (플레이스홀더)
+- `trip-vlog.mp4` — 여행 브이로그 (**플레이스홀더**)
+  · 실제 촬영 영상이 아니라, 위 `trip1~3.svg` 와 `travel-music.wav` 를
+    ffmpeg 로 합친 7.8초 슬라이드쇼입니다 (느린 줌 + 크로스페이드).
+  · 실제 영상이 생기면 같은 이름으로 덮어쓰면 그대로 반영됩니다.
 
 ### 실제 파일로 교체하려면
 - 사진: `trip1.jpg` 등 실제 사진을 넣고 HTML의 `src`를 `.jpg`로 변경 (또는 같은 이름 `.svg` 교체)

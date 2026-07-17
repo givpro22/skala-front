@@ -9,6 +9,15 @@
     <script src="../js/common.js"></script>
     <script src="../js/achievements.js"></script>
     <script src="../js/ambient.js"></script>
+    <script src="../js/supabaseConfig.js"></script>
+    <script type="module" src="../js/supabaseClient.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/auth-ui.js"></script>
+    <script src="../js/canvas.js"></script>
+    <script src="../js/presence.js"></script>
+    <script src="../js/dock.js"></script>
+    <script src="../js/guestbook.js"></script>
+    <script src="../js/stats.js"></script>
     <script src="../js/terminal.js"></script>
     <!-- 테마 모달 (커스텀 prompt/alert) — 게임 스크립트보다 먼저 로드 -->
     <script src="../js/ui-dialog.js"></script>
@@ -122,11 +131,14 @@
                     </div>
                 </figure>
             </section>
+
         </main>
 
         <hr>
 
         <aside data-reveal>
+            <!-- 사이트 현황 · 업적 랭킹 · 방명록은 우측 도크 패널로 이동했다
+                 (문서 맨 아래 .dock 참고) -->
             <h2>실시간 날씨</h2>
             <p class="aside-sub">도시를 선택하면 Open-Meteo API 로 현재 날씨를 실시간 조회합니다.</p>
             <div class="weather-widget">

@@ -9,6 +9,16 @@
     <script src="../js/common.js"></script>
     <script src="../js/achievements.js"></script>
     <script src="../js/ambient.js"></script>
+    <script src="../js/supabaseConfig.js"></script>
+    <script type="module" src="../js/supabaseClient.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/auth-ui.js"></script>
+    <script src="../js/dock.js"></script>
+    <script src="../js/guestbook.js"></script>
+    <script src="../js/stats.js"></script>
+    <script src="../js/canvas.js"></script>
+    <script src="../js/presence.js"></script>
+    <script src="../js/profile.js"></script>
     <title>나의 소개 · 박영서</title>
 </head>
 <body>
@@ -26,6 +36,57 @@
     </header>
 
     <div class="container" data-file="myProfile.html">
+
+        <!-- ── 내 계정 (로그인한 회원에게만 보임) ───────────────────
+             아래 포트폴리오는 사이트 주인(박영서)의 소개이고,
+             이 섹션은 로그인한 방문자 본인의 회원 정보다. -->
+        <section class="account-card" id="accountCard" hidden>
+            <h2>내 계정</h2>
+            <p class="account-meta" id="accountMeta"></p>
+
+            <form id="profileForm">
+                <p>
+                    <label for="pfName">이름</label><br>
+                    <input type="text" id="pfName" required>
+                </p>
+                <p>
+                    <label for="pfBirth">생년월일</label><br>
+                    <input type="date" id="pfBirth">
+                </p>
+                <p>
+                    성별:
+                    <label><input type="radio" name="pfGender" value="male"> 남성</label>
+                    <label><input type="radio" name="pfGender" value="female"> 여성</label>
+                    <label><input type="radio" name="pfGender" value="none"> 선택안함</label>
+                </p>
+                <p>
+                    관심 분야:<br>
+                    <label><input type="checkbox" name="pfInterest" value="frontend"> 웹 프론트엔드</label><br>
+                    <label><input type="checkbox" name="pfInterest" value="uiux"> UI/UX 디자인 표준</label><br>
+                    <label><input type="checkbox" name="pfInterest" value="backend"> 백엔드 &amp; 데이터베이스</label><br>
+                    <label><input type="checkbox" name="pfInterest" value="devops"> 클라우드 &amp; 인프라</label>
+                </p>
+                <p>
+                    <label for="pfIntro">자기소개</label><br>
+                    <textarea id="pfIntro" rows="4" maxlength="200"
+                              placeholder="최대 200자"></textarea>
+                    <span class="char-count" id="pfCharCount">0 / 200자</span>
+                </p>
+
+                <!-- 로그아웃은 상단바 계정 메뉴에 있다 (저장 옆에 두면 오클릭 위험) -->
+                <div class="btn-row">
+                    <input type="submit" id="pfSaveBtn" value="저장">
+                </div>
+
+                <p class="form-status" id="pfStatus" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+
+        <!-- 비로그인 안내 -->
+        <p class="login-hint" id="accountGuest" hidden>
+            <a href="login.html">로그인</a>하면 내 회원 정보와 업적을 확인할 수 있습니다.
+        </p>
+
         <h1>안녕하세요, 박영서입니다</h1>
         <!-- 프로필 헤더 카드 -->
         <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;margin:20px 0;">
